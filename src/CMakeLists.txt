@@ -20,12 +20,12 @@ include_directories(${CMAKE_SOURCE_DIR}/ecs)
 add_library(ecs SHARED ecs/entity_manager.cpp)
 
 # Platform abstraction layer
-include_directories(${CMAKE_SOURCE_DIR}/platform)
-add_library(platform SHARED platform/window.c)
-target_link_libraries(platform ${GLFW_LIBRARIES})
+include_directories(${CMAKE_SOURCE_DIR}/window)
+add_library(window SHARED window/window.c)
+target_link_libraries(window ${GLFW_LIBRARIES})
 
 
 # Main executable - for testing purposes only
 set(SOURCE_FILES main.cpp)
 add_executable(main ${SOURCE_FILES})
-target_link_libraries(main ecs platform)
+target_link_libraries(main ecs window)

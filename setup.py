@@ -7,7 +7,27 @@ import os
 import subprocess
 
 
+DEBUG = True
 PROJECT_NAME = 'astro'
+
+
+class GameModule(Extension):
+    def __init__(self, name: str, sources: list, libraries: list=None, cpp: bool=True):
+        extra_compile_args = ['-std=c++14'] if cpp else ['-std=c11']
+        if not isinstance(libraries, list):
+            libraries = []
+        undef_macros = []
+        if DEBUG:
+            extra_compile_args += ['-Wall', '-Werror']
+            undef_macros += ['NDEBUG']
+        super().__init__(
+            name='{}.native.{}'.format(PROJECT_NAME, name),
+            sources=['src/{}'.format(file) for file in sources],
+            include_dirs=['src/{}'.format(name)],
+            libraries=libraries,
+            extra_compile_args=extra_compile_args,
+            undef_macros=undef_macros,
+        )
 
 
 def main():
@@ -17,21 +37,16 @@ def main():
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
-    ecs_ext = Extension(
-        name='astro.native.ecs',
-        sources=['src/ecs/entity_manager.cpp', 'src/ecs/entity_manager_py.cpp'],
-        include_dirs=['src/ecs'],
-        extra_compile_args=['-std=c++14', '-Wall', '-Werror'],
-        undef_macros=['NDEBUG']
+    ecs = GameModule(
+        name='ecs',
+        sources=['ecs/entity_manager.cpp', 'ecs/entity_manager_py.cpp']
     )
 
-    window_ext = Extension(
-        name='astro.native.window',
-        sources=['src/platform/window.c', 'src/platform/window_py.c'],
-        include_dirs=['src/platform'],
+    window = GameModule(
+        name='window',
+        sources=['window/window.c', 'window/window_py.c'],
         libraries=['glfw'],
-        extra_compile_args=['-std=c11', '-Wall', '-Werror'],
-        undef_macros=['NDEBUG']
+        cpp=False
     )
 
     setup(
@@ -41,7 +56,7 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=[ecs_ext, window_ext]
+        ext_modules=[ecs, window]
     )
 
 
