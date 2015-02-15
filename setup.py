@@ -1,8 +1,11 @@
+from distutils.command.build import build
 from multiprocessing import pool
 from setuptools import Extension, setup
+from setuptools.command.install import install
 import distutils.ccompiler
 import os
 import subprocess
+
 
 PROJECT_NAME = 'astro'
 
@@ -14,30 +17,52 @@ def main():
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
-    graphics_ext = Extension(
-        name='astro.native.gl',
-        sources=['src/graphics/gl.c'],
-        include_dirs=['src/graphics'],
+    core_sources = [
+        'graphics/gl.cpp',
+        'graphics/render_system.cpp'
+    ]
+
+    core_ext = Extension(
+        name='astro.native.core',
+        sources=['src/core/{}'.format(path) for path in core_sources],
+        include_dirs=['src/core'],
         libraries=['GLEW'],
-        extra_compile_args=['-std=c11', '-Wall', '-Werror']
+        extra_compile_args=['-std=c++14', '-Wall', '-Werror'],
     )
 
     window_ext = Extension(
         name='astro.native.window',
-        sources=['src/window/window.c'],
-        include_dirs=['src/window'],
+        sources=['src/platform/window.c', 'src/platform/window_py.c'],
+        include_dirs=['src/platform'],
         libraries=['glfw'],
         extra_compile_args=['-std=c11', '-Wall', '-Werror']
     )
 
     setup(
+        cmdclass={'build': SwigBuild, 'install': SwigInstall},
         name=PROJECT_NAME,
         author='Byron Henze',
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=[graphics_ext, window_ext],
+        ext_modules=[core_ext, window_ext]
     )
+
+
+class SwigBuild(build):
+    """ Make sure that swig files are generated and copied before the build command """
+
+    def run(self):
+        self.run_command('build_ext')
+        build.run(self)
+
+
+class SwigInstall(install):
+    """ Make sure that swig files are generated and copied before the install command """
+
+    def run(self):
+        self.run_command('build_ext')
+        self.do_egg_install()
 
 
 def parallel_compile(self, sources, output_dir=None, macros=None, include_dirs=None, debug=0, extra_preargs=None,

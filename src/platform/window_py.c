@@ -1,48 +1,8 @@
 #include "window.h"
-#include <stdio.h>
-#include <GLFW/glfw3.h>
 #include <Python.h>
 
 
-static GLFWwindow* window;
-
-void window_create(char* title, int width, int height, int samples) {
-    if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW");
-        exit(EXIT_FAILURE);
-    }
-
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-
-    if (samples > 0) {
-        glfwWindowHint(GLFW_SAMPLES, samples);
-    }
-
-    window = glfwCreateWindow(width, height, title, NULL, NULL);
-    if (!window) {
-        fprintf(stderr, "Failed to create window");
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-}
-
-void window_destroy(void) {
-    glfwDestroyWindow(window);
-    glfwTerminate();
-}
-
-void window_poll_events(void) {
-    glfwPollEvents();
-}
-
-void window_swap_buffers(void) {
-    glfwSwapBuffers(window);
-}
+static PyObject* py_key_callback_func;
 
 static PyObject* py_window_create(PyObject* self, PyObject* args) {
     char* title;
@@ -69,9 +29,7 @@ static PyObject* py_window_swap_buffers(PyObject* self, PyObject* args) {
     Py_RETURN_NONE;
 }
 
-static PyObject* py_key_callback_func;
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+static void py_key_callback(int key, int action) {
     PyObject* args;
     PyObject* kwargs;
 
@@ -110,17 +68,17 @@ static PyObject* py_set_key_callback(PyObject* self, PyObject* args) {
     Py_XDECREF(py_key_callback_func);
 
     py_key_callback_func = temp;
-    glfwSetKeyCallback(window, key_callback);
+    window_set_key_callback(py_key_callback);
 
     Py_RETURN_NONE;
 }
 
 static PyMethodDef window_methods[] = {
-        {"create", py_window_create, METH_VARARGS, "Open a GLFW window"},
-        {"destroy", py_window_destroy, METH_NOARGS, "Destroy the GLFW window"},
-        {"poll_events", py_window_poll_events, METH_NOARGS, "Poll for input events"},
-        {"swap_buffers", py_window_swap_buffers, METH_NOARGS, "Swap the front and back buffers"},
-        {"set_key_callback", py_set_key_callback, METH_VARARGS, "Set the keypress callback function"},
+        {"create", py_window_create, METH_VARARGS, NULL},
+        {"destroy", py_window_destroy, METH_NOARGS, NULL},
+        {"poll_events", py_window_poll_events, METH_NOARGS, NULL},
+        {"swap_buffers", py_window_swap_buffers, METH_NOARGS, NULL},
+        {"set_key_callback", py_set_key_callback, METH_VARARGS, NULL},
         {NULL, NULL, 0, NULL}
 };
 

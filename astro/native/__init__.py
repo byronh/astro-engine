@@ -1,1 +1,1 @@
-__all__ = ['gl', 'window']
+__all__ = ['graphics', 'platform']
