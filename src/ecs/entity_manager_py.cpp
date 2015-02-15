@@ -2,7 +2,7 @@
 #include <Python.h>
 
 
-static void del_EntityManager(PyObject* obj) {
+static void PyEntityManager_del(PyObject* obj) {
     EntityManager* em = (EntityManager*) PyCapsule_GetPointer(obj, "EntityManager");
     delete em;
 }
@@ -12,7 +12,7 @@ static EntityManager* PyEntityManager_as_EntityManager(PyObject* obj) {
 }
 
 static PyObject* PyEntityManager_from_EntityManager(EntityManager* em, int must_free) {
-    return PyCapsule_New(em, "EntityManager", must_free ? (PyCapsule_Destructor) del_EntityManager : NULL);
+    return PyCapsule_New(em, "EntityManager", must_free ? (PyCapsule_Destructor) PyEntityManager_del : NULL);
 }
 
 static PyObject* py_EntityManager(PyObject* self, PyObject* args) {

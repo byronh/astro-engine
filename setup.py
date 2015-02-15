@@ -12,7 +12,7 @@ PROJECT_NAME = 'astro'
 
 
 class GameModule(Extension):
-    def __init__(self, name: str, sources: list, libraries: list=None, cpp: bool=True):
+    def __init__(self, name: str, sources: list, libraries: list=None, cpp: bool=True, swig: bool=False):
         extra_compile_args = ['-std=c++14'] if cpp else ['-std=c11']
         if not isinstance(libraries, list):
             libraries = []
@@ -20,12 +20,19 @@ class GameModule(Extension):
         if DEBUG:
             extra_compile_args += ['-Wall', '-Werror']
             undef_macros += ['NDEBUG']
+        swig_opts = None
+        if swig:
+            name = '_{}'.format(name)
+            swig_opts = ['-c++', '-py3', '-Werror', '-outdir', '{}/native'.format(PROJECT_NAME)]
+        else:
+            name = '{}.native.{}'.format(PROJECT_NAME, name)
         super().__init__(
-            name='{}.native.{}'.format(PROJECT_NAME, name),
+            name=name,
             sources=['src/{}'.format(file) for file in sources],
             include_dirs=['src/{}'.format(name)],
             libraries=libraries,
             extra_compile_args=extra_compile_args,
+            swig_opts=swig_opts,
             undef_macros=undef_macros,
         )
 
@@ -42,6 +49,13 @@ def main():
         sources=['ecs/entity_manager.cpp', 'ecs/entity_manager_py.cpp']
     )
 
+    graphics = GameModule(
+        name='graphics',
+        sources=['graphics/gl.cpp', 'graphics/render_system.cpp', 'interface/render_system.i'],
+        swig=True,
+        libraries=['GLEW']
+    )
+
     window = GameModule(
         name='window',
         sources=['window/window.c', 'window/window_py.c'],
@@ -56,7 +70,7 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=[ecs, window]
+        ext_modules=[ecs, graphics, window]
     )
 
 

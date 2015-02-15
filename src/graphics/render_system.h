@@ -1,11 +1,8 @@
 #pragma once
 
-#include "ecs/system.h"
 
-
-class RenderSystem: public System {
+class RenderSystem {
 public:
-    virtual ~RenderSystem();
-    virtual void initialize() override;
-    virtual void update(float delta_time) override;
+    void initialize();
+    void update(float delta_time);
 };
