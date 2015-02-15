@@ -1,6 +1,6 @@
 #pragma once
 
-#include "system.h"
+#include "ecs/system.h"
 
 
 class RenderSystem: public System {

@@ -1,20 +1,9 @@
-#include "memory/component_allocator.h"
-#include <iostream>
-
-
-class Test {
-    int x;
-    int y;
-    int z;
-};
+#include "ecs/entity_manager.h"
 
 
 int main() {
-    Test t;
-    std::cout << sizeof(Test) << std::endl;
-    std::cout << alignof(Test) << std::endl;
-
-    ComponentAllocator ca;
+    EntityManager* em = new EntityManager();
+    delete em;
 
     return 0;
 }
