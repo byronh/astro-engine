@@ -17,17 +17,12 @@ def main():
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
-    core_sources = [
-        'graphics/gl.cpp',
-        'graphics/render_system.cpp'
-    ]
-
-    core_ext = Extension(
-        name='astro.native.core',
-        sources=['src/core/{}'.format(path) for path in core_sources],
-        include_dirs=['src/core'],
-        libraries=['GLEW'],
+    ecs_ext = Extension(
+        name='astro.native.ecs',
+        sources=['src/ecs/entity_manager.cpp', 'src/ecs/entity_manager_py.cpp'],
+        include_dirs=['src/ecs'],
         extra_compile_args=['-std=c++14', '-Wall', '-Werror'],
+        undef_macros=['NDEBUG']
     )
 
     window_ext = Extension(
@@ -35,7 +30,8 @@ def main():
         sources=['src/platform/window.c', 'src/platform/window_py.c'],
         include_dirs=['src/platform'],
         libraries=['glfw'],
-        extra_compile_args=['-std=c11', '-Wall', '-Werror']
+        extra_compile_args=['-std=c11', '-Wall', '-Werror'],
+        undef_macros=['NDEBUG']
     )
 
     setup(
@@ -45,7 +41,7 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=[core_ext, window_ext]
+        ext_modules=[ecs_ext, window_ext]
     )
 
 

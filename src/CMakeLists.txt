@@ -14,18 +14,18 @@ include_directories(${GLEW_INCLUDE_PATH})
 include_directories(${GLFW_INCLUDE_DIR})
 include_directories(${PYTHON_INCLUDE_DIRS})
 
-# Core engine module
-include_directories(${CMAKE_SOURCE_DIR}/core)
-file(GLOB_RECURSE cpp_sources core/*.cpp core/graphics/*.cpp)
-add_library(core SHARED ${cpp_sources})
-target_link_libraries(core ${GLEW_LIBRARY} ${PYTHON_LIBRARIES})
+
+# Entity-component system
+include_directories(${CMAKE_SOURCE_DIR}/ecs)
+add_library(ecs SHARED ecs/entity_manager.cpp)
 
 # Platform abstraction layer
 include_directories(${CMAKE_SOURCE_DIR}/platform)
 add_library(platform SHARED platform/window.c)
-target_link_libraries(platform ${GLFW_LIBRARIES} ${PYTHON_LIBRARIES})
+target_link_libraries(platform ${GLFW_LIBRARIES})
+
 
 # Main executable - for testing purposes only
 set(SOURCE_FILES main.cpp)
 add_executable(main ${SOURCE_FILES})
-target_link_libraries(main core platform)
+target_link_libraries(main ecs platform)

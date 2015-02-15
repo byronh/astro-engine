@@ -55,19 +55,15 @@ static void py_key_callback(int key, int action) {
     PyGILState_Release(state);
 }
 
-static PyObject* py_set_key_callback(PyObject* self, PyObject* args) {
-    PyObject* temp;
-    if (!PyArg_ParseTuple(args, "O", &temp)) {
-        return NULL;
-    }
-    if (!PyCallable_Check(temp)) {
+static PyObject* py_set_key_callback(PyObject* self, PyObject* callback) {
+    if (!PyCallable_Check(callback)) {
         return NULL;
     }
 
-    Py_XINCREF(temp);
+    Py_XINCREF(callback);
     Py_XDECREF(py_key_callback_func);
 
-    py_key_callback_func = temp;
+    py_key_callback_func = callback;
     window_set_key_callback(py_key_callback);
 
     Py_RETURN_NONE;
@@ -78,7 +74,7 @@ static PyMethodDef window_methods[] = {
         {"destroy", py_window_destroy, METH_NOARGS, NULL},
         {"poll_events", py_window_poll_events, METH_NOARGS, NULL},
         {"swap_buffers", py_window_swap_buffers, METH_NOARGS, NULL},
-        {"set_key_callback", py_set_key_callback, METH_VARARGS, NULL},
+        {"set_key_callback", py_set_key_callback, METH_O, NULL},
         {NULL, NULL, 0, NULL}
 };
 
