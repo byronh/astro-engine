@@ -1,7 +1,7 @@
 #include "camera.h"
 
 
-Camera::Camera() : projection(Matrix4::identity()), view(Matrix4::identity()) {
+Camera::Camera() : projection(math::identity_matrix), view(math::identity_matrix) {
 
 }
 
@@ -14,9 +14,9 @@ Camera::~Camera() {
 }
 
 const Matrix4& Camera::get_projection_matrix() const {
-    return projection;
+    return this->projection;
 }
 
 const Matrix4& Camera::get_view_matrix() const {
-    return view;
+    return this->view;
 }

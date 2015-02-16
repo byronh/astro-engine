@@ -2,7 +2,7 @@ from astro.application import Application, ApplicationConfig, ApplicationListene
 from astro.ecs import EntityManager
 from astro.graphics.render_system import RenderSystem
 from astro.input import InputListener, Keys
-from astro.native.graphics import Mesh
+from astro.native.graphics import Mesh, Camera, Vector3, Matrix4
 from os import path
 
 
@@ -12,6 +12,10 @@ class ExampleGame(ApplicationListener, InputListener):
         super().__init__()
         self.entity_manager = EntityManager()
         self.render_system = RenderSystem()
+        self.camera = Camera(
+            Matrix4.perspective(45.0, 16.0 / 9.0, 0.1, 100.0),
+            Matrix4.look_at(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0))
+        )
         self.mesh = None
 
     def create(self):
