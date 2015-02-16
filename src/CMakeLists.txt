@@ -15,6 +15,10 @@ include_directories(${GLFW_INCLUDE_DIR})
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 
+# Shared includes
+include_directories(${CMAKE_SOURCE_DIR}/math)
+
+
 # Entity-component system
 include_directories(${CMAKE_SOURCE_DIR}/ecs)
 add_library(ecs SHARED ecs/entity_manager.cpp)

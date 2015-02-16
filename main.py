@@ -2,6 +2,7 @@ from astro.application import Application, ApplicationConfig, ApplicationListene
 from astro.ecs import EntityManager
 from astro.graphics.render_system import RenderSystem
 from astro.input import InputListener, Keys
+from astro.native.graphics import Mesh
 from os import path
 
 
@@ -11,14 +12,17 @@ class ExampleGame(ApplicationListener, InputListener):
         super().__init__()
         self.entity_manager = EntityManager()
         self.render_system = RenderSystem()
+        self.mesh = None
 
     def create(self):
         self.app.set_input_listener(self)
         self.render_system.initialize()
+        self.mesh = Mesh()
 
         vert = path.join('shaders', 'basic.vert.glsl')
         frag = path.join('shaders', 'basic.frag.glsl')
-        self.render_system.load_shader(vert, frag)
+        shader = self.render_system.load_shader(vert, frag)
+        shader.begin()
 
     def destroy(self):
         self.render_system.cleanup()
@@ -26,6 +30,7 @@ class ExampleGame(ApplicationListener, InputListener):
 
     def render(self):
         self.render_system.render()
+        self.mesh.draw()
 
     def key_down(self, key_code: int):
         if key_code == Keys.KEY_ESCAPE:

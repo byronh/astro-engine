@@ -4,7 +4,7 @@ from astro.native import graphics
 
 class NoGLContextException(Exception):
     def __init__(self):
-        super().__init__('OpenGL context is required before using renderer')
+        super().__init__('OpenGL context is required')
 
 
 class RenderSystem:
@@ -43,3 +43,4 @@ class RenderSystem:
         self.shaders[shader.handle] = shader
 
         print("Loaded shader program: {} -> {}".format(shader.handle, [vertex_shader_path, fragment_shader_path]))
+        return shader

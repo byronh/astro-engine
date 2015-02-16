@@ -11,32 +11,6 @@ DEBUG = True
 PROJECT_NAME = 'astro'
 
 
-class GameModule(Extension):
-    def __init__(self, name: str, sources: list, libraries: list=None, cpp: bool=True, swig: bool=False):
-        extra_compile_args = ['-std=c++14'] if cpp else ['-std=c11']
-        if not isinstance(libraries, list):
-            libraries = []
-        undef_macros = []
-        if DEBUG:
-            extra_compile_args += ['-Wall', '-Werror']
-            undef_macros += ['NDEBUG']
-        swig_opts = None
-        if swig:
-            name = '_{}'.format(name)
-            swig_opts = ['-c++', '-py3', '-Werror', '-outdir', '{}/native'.format(PROJECT_NAME)]
-        else:
-            name = '{}.native.{}'.format(PROJECT_NAME, name)
-        super().__init__(
-            name=name,
-            sources=['src/{}'.format(file) for file in sources],
-            include_dirs=['src/{}'.format(name)],
-            libraries=libraries,
-            extra_compile_args=extra_compile_args,
-            swig_opts=swig_opts,
-            undef_macros=undef_macros,
-        )
-
-
 def main():
     """ Build the whole engine as a python package """
 
@@ -51,11 +25,13 @@ def main():
 
     graphics = GameModule(
         name='graphics',
+        extra_include_dirs=['math'],
         sources=[
             'graphics/gl.cpp',
+            'graphics/mesh.cpp',
             'graphics/render_system.cpp',
             'graphics/shader.cpp',
-            'interface/graphics.i'
+            'swig/graphics.i'
         ],
         swig=True,
         libraries=['GLEW']
@@ -77,6 +53,35 @@ def main():
         packages=[PROJECT_NAME],
         ext_modules=[ecs, graphics, window]
     )
+
+
+class GameModule(Extension):
+    def __init__(self, name: str, sources: list, libraries: list=None, cpp: bool=True, swig: bool=False,
+                 extra_include_dirs: list=None):
+        extra_compile_args = ['-std=c++14'] if cpp else ['-std=c11']
+        if not isinstance(libraries, list):
+            libraries = []
+        if not isinstance(extra_include_dirs, list):
+            extra_include_dirs = []
+        undef_macros = []
+        if DEBUG:
+            extra_compile_args += ['-Wall', '-Werror']
+            undef_macros += ['NDEBUG']
+        swig_opts = None
+        if swig:
+            name = '_{}'.format(name)
+            swig_opts = ['-c++', '-py3', '-Werror', '-outdir', '{}/native'.format(PROJECT_NAME)]
+        else:
+            name = '{}.native.{}'.format(PROJECT_NAME, name)
+        super().__init__(
+            name=name,
+            sources=['src/{}'.format(file) for file in sources],
+            include_dirs=['src/{}'.format(name)] + ['src/{}'.format(include) for include in extra_include_dirs],
+            libraries=libraries,
+            extra_compile_args=extra_compile_args,
+            swig_opts=swig_opts,
+            undef_macros=undef_macros,
+        )
 
 
 class SwigBuild(build):
