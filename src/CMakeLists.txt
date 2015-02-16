@@ -19,9 +19,10 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/ecs)
 add_library(ecs SHARED ecs/entity_manager.cpp)
 
-# Rendering system
+# Graphics system
 include_directories(${CMAKE_SOURCE_DIR}/graphics)
-add_library(graphics SHARED graphics/gl.cpp graphics/render_system.cpp)
+file(GLOB_RECURSE graphics_sources graphics/*.cpp)
+add_library(graphics SHARED ${graphics_sources})
 target_link_libraries(graphics ${GLEW_LIBRARY})
 
 # Platform abstraction layer

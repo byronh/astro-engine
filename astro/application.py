@@ -30,7 +30,7 @@ class Application:
             window.poll_events()
 
             self.application_listener.update(delta_time=0)
-            self.application_listener.render(interpolation=0)
+            self.application_listener.render()
 
             window.swap_buffers()
 
@@ -64,5 +64,5 @@ class ApplicationListener(metaclass=ABCMeta):
     def update(self, delta_time: float):
         return NotImplemented
 
-    def render(self, interpolation: float):
+    def render(self):
         return NotImplemented

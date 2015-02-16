@@ -51,7 +51,12 @@ def main():
 
     graphics = GameModule(
         name='graphics',
-        sources=['graphics/gl.cpp', 'graphics/render_system.cpp', 'interface/render_system.i'],
+        sources=[
+            'graphics/gl.cpp',
+            'graphics/render_system.cpp',
+            'graphics/shader.cpp',
+            'interface/graphics.i'
+        ],
         swig=True,
         libraries=['GLEW']
     )
