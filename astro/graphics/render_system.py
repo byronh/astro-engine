@@ -16,6 +16,14 @@ class RenderSystem:
     def __del__(self):
         self.cleanup()
 
+    @property
+    def camera(self):
+        return self.rs.camera
+
+    @camera.setter
+    def camera(self, value):
+        self.rs.camera = value
+
     def cleanup(self):
         del self.rs
 

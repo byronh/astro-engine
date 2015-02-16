@@ -15,6 +15,9 @@ struct Vector3 {
     Vector3 operator-(const Vector3& other) const;
     Vector3 operator-() const;
 
+    bool operator==(const Vector3& other) const;
+    bool operator!=(const Vector3& other) const;
+
     float length() const;
     void normalize();
 };
@@ -29,6 +32,14 @@ inline Vector3 Vector3::operator-(const Vector3& other) const {
 
 inline Vector3 Vector3::operator-() const {
     return Vector3(-x, -y, -z);
+}
+
+inline bool Vector3::operator==(const Vector3& other) const {
+    return x == other.x && y == other.y && z == other.z;
+}
+
+inline bool Vector3::operator!=(const Vector3& other) const {
+    return x != other.x || y != other.y || z != other.z;
 }
 
 inline float Vector3::length() const {

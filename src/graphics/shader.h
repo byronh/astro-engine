@@ -8,4 +8,5 @@ public:
 
     const unsigned handle;
     void begin();
+    int get_uniform_location(const char* name);
 };

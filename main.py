@@ -23,8 +23,8 @@ class ExampleGame(ApplicationListener, InputListener):
         self.render_system.initialize()
         self.mesh = Mesh()
 
-        vert = path.join('shaders', 'basic.vert.glsl')
-        frag = path.join('shaders', 'basic.frag.glsl')
+        vert = path.join('shaders', 'triangle.vert.glsl')
+        frag = path.join('shaders', 'triangle.frag.glsl')
         shader = self.render_system.load_shader(vert, frag)
         shader.begin()
 

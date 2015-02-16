@@ -27,3 +27,7 @@ Shader::~Shader() {
 void Shader::begin() {
     gl::use_program(this->handle);
 }
+
+int Shader::get_uniform_location(const char* name) {
+    return gl::get_uniform_location(this->handle, name);
+}

@@ -42,6 +42,14 @@ namespace gl {
         glDeleteProgram(handle);
     }
 
+    int get_uniform_location(unsigned program_handle, const char* name) {
+        GLint location = glGetUniformLocation(program_handle, name);
+        if (location == -1) {
+            fprintf(stderr, "Invalid uniform location\n");
+            exit(EXIT_FAILURE);
+        }
+        return location;
+    }
 
     void link_program(unsigned handle) {
         glLinkProgram(handle);

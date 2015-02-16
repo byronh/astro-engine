@@ -1,7 +1,6 @@
 #include "mesh.h"
 #include "vector3.h"
 #include <GL/glew.h>
-#include <iostream>
 
 
 Mesh::Mesh() {
