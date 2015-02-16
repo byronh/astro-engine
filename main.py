@@ -42,7 +42,7 @@ if __name__ == '__main__':
     config.title = "Example Game"
     config.width = 800
     config.height = 600
-    config.samples = 4
+    config.samples = 8
 
     app = Application(ExampleGame(), config)
     app.run()

@@ -15,6 +15,8 @@ namespace gl {
         }
 
         glClearDepth(1.0);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
     }
 
     void info(void) {
