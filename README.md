@@ -10,7 +10,7 @@ git clone https://github.com/byronh/astro-engine.git
 
 #####2. Install required native libraries:
 ```
-pacman -S glew glfw swig
+pacman -S glew glfw glm swig
 ```
 
 #####3. Install python package:

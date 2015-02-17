@@ -25,11 +25,9 @@ def main():
 
     graphics = GameModule(
         name='graphics',
-        extra_include_dirs=['math'],
         sources=[
             'graphics/camera.cpp',
             'graphics/gl.cpp',
-            'graphics/mesh.cpp',
             'graphics/render_system.cpp',
             'graphics/shader.cpp',
             'swig/graphics.i'
