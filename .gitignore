@@ -8,3 +8,4 @@ __pycache__/
 *_wrap.*
 astro/native/*
 !astro/native/__init__.py
+src/CMakeLists.txt.user

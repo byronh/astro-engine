@@ -1,7 +1,7 @@
 #pragma once
 
 #include "camera.h"
-#include "math.h"
+#include "types.h"
 
 
 class RenderSystem {
