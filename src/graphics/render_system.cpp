@@ -26,9 +26,10 @@ void RenderSystem::initialize() {
         Matrix4 model;
         model = glm::translate(model, Vector3(
                 (rand() % 100 - 50) * 3,
-                0,
+                -(rand() % 20) * 3,
                 (rand() % 100 - 50) * 3
         ));
+        model = glm::rotate(model, rand() % 360 * 1.0f, Vector3(0, 1, 0));
         mvps[i] = combined * model;
     }
 
