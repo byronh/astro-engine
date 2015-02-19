@@ -5,11 +5,19 @@
 
 
 static GLFWwindow* window;
+
+void (*window_framebuffer_size_callback)(int width, int height);
 void (*window_key_callback)(int key_code, int action);
+
+
+void on_framebuffer_size(GLFWwindow* window, int width, int height) {
+    window_framebuffer_size_callback(width, height);
+}
 
 void on_key_down(GLFWwindow* window, int key, int scancode, int action, int mods) {
     window_key_callback(key, action);
 }
+
 
 void window_create(char* title, int width, int height, int samples) {
     if (!glfwInit()) {
@@ -45,6 +53,11 @@ void window_destroy(void) {
 
 void window_poll_events(void) {
     glfwPollEvents();
+}
+
+void window_set_framebuffer_size_callback(void (*callback_function)(int width, int height)) {
+    window_framebuffer_size_callback = callback_function;
+    glfwSetFramebufferSizeCallback(window, on_framebuffer_size);
 }
 
 void window_set_key_callback(void (*callback_function)(int key_code, int action)) {

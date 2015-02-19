@@ -1,6 +1,6 @@
 from abc import ABCMeta
+from astro.graphics.window import Window
 from astro.input import InputListener
-from astro.native import window
 
 
 class ApplicationConfig:
@@ -20,11 +20,10 @@ class Application:
         application_listener.app = self
 
     def run(self):
-        window.create(self.config.title, self.config.width, self.config.height, self.config.samples)
-        window.set_key_callback(self.__on_key_event)
-
+        window = Window(self)
         self.running = True
         self.application_listener.create()
+        self.application_listener.resize(self.config.width, self.config.height)
 
         while self.running:
             window.poll_events()
@@ -35,7 +34,7 @@ class Application:
             window.swap_buffers()
 
         self.application_listener.destroy()
-        window.destroy()
+        del window
 
     def exit(self):
         self.running = False
@@ -43,7 +42,7 @@ class Application:
     def set_input_listener(self, input_listener: InputListener):
         self.input_listener = input_listener
 
-    def __on_key_event(self, key_code: int, action: int):
+    def on_key_event(self, key_code: int, action: int):
         if self.input_listener:
             if action == 0:
                 self.input_listener.key_up(key_code)
@@ -65,4 +64,7 @@ class ApplicationListener(metaclass=ABCMeta):
         return NotImplemented
 
     def render(self):
+        return NotImplemented
+
+    def resize(self, width: int, height: int):
         return NotImplemented
