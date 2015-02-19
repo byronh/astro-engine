@@ -20,7 +20,7 @@ def main():
 
     ecs = GameModule(
         name='ecs',
-        sources=['ecs/entity_manager.cpp', 'ecs/entity_manager_py.cpp']
+        sources=['core/entity_manager.cpp', 'core/entity_manager_py.cpp']
     )
 
     graphics = GameModule(
@@ -75,7 +75,7 @@ class GameModule(Extension):
         super().__init__(
             name=name,
             sources=['src/{}'.format(file) for file in sources],
-            include_dirs=['src/{}'.format(name)] + ['src/{}'.format(include) for include in extra_include_dirs],
+            include_dirs=['src'] + extra_include_dirs,
             libraries=libraries,
             extra_compile_args=extra_compile_args,
             swig_opts=swig_opts,

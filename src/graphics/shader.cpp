@@ -1,5 +1,5 @@
-#include "shader.h"
-#include "gl.h"
+#include "graphics/shader.h"
+#include "graphics/gl.h"
 
 
 Shader::Shader(const char* vertex_source, const char* fragment_source) : handle(gl::create_program()) {

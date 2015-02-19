@@ -1,6 +1,5 @@
 #pragma once
 
-#include "entity_manager.h"
 #include <deque>
 #include <vector>
 

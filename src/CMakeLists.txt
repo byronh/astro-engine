@@ -6,31 +6,24 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14")
 
-# Third-party libs
 find_package(GLEW REQUIRED)
 find_package(GLFW REQUIRED)
 find_package(PythonLibs REQUIRED)
+include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${GLEW_INCLUDE_PATH})
 include_directories(${GLFW_INCLUDE_DIR})
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 
-# Shared includes
-include_directories(${CMAKE_SOURCE_DIR}/math)
-
-
 # Entity-component system
-include_directories(${CMAKE_SOURCE_DIR}/ecs)
-add_library(ecs SHARED ecs/entity_manager.cpp)
+add_library(core SHARED core/entity_manager.cpp)
 
 # Graphics system
-include_directories(${CMAKE_SOURCE_DIR}/graphics)
 file(GLOB_RECURSE graphics_sources graphics/*.cpp)
 add_library(graphics SHARED ${graphics_sources})
 target_link_libraries(graphics ${GLEW_LIBRARY})
 
 # Platform abstraction layer
-include_directories(${CMAKE_SOURCE_DIR}/window)
 add_library(window SHARED window/window.c)
 target_link_libraries(window ${GLFW_LIBRARIES})
 
@@ -38,4 +31,4 @@ target_link_libraries(window ${GLFW_LIBRARIES})
 # Main executable - for testing purposes only
 set(SOURCE_FILES main.cpp)
 add_executable(main ${SOURCE_FILES})
-target_link_libraries(main ecs window)
+target_link_libraries(main core window)

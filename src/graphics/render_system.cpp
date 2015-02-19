@@ -1,5 +1,5 @@
-#include "render_system.h"
-#include "gl.h"
+#include "graphics/render_system.h"
+#include "graphics/gl.h"
 #include <GL/glew.h>
 
 

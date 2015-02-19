@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "graphics/camera.h"
 
 
 Camera::Camera() : projection(glm::mat4x4(1.0f)), view(glm::mat4x4(1.0f)) {
