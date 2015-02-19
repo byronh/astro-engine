@@ -6,28 +6,33 @@
 RenderSystem::~RenderSystem() {
     delete camera;
 
-    glDeleteBuffers(1, &vbo);
-    glDeleteBuffers(1, &vao);
-    glDeleteBuffers(1, &ibo);
+    glDeleteBuffers(1, &vertexArray);
+    glDeleteBuffers(1, &positionAttributeBuffer);
+    glDeleteBuffers(1, &colorAttributeBuffer);
+    glDeleteBuffers(1, &mvpAttributeBuffer);
 }
 
 void RenderSystem::initialize() {
     gl::initialize();
-    gl::set_clear_color(Color{0.0, 0.0, 0.0, 1.0});
-    mvp_uniform = 0;
+    gl::set_clear_color(Color{0.1, 0.1, 0.1, 1.0});
 
     camera = new Camera(
-        glm::perspective(45.0f, 8.0f / 6.0f, 0.1f, 100.0f),
-        glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+            glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 100.0f),
+            glm::lookAt(glm::vec3(16, 12, 12), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
     );
 
-    glm::mat4x4 combined = camera->projection * camera->view;
-    mvp = combined * model;
+    Matrix4 combined = camera->projection * camera->view;
+    for (unsigned i = 0; i < 10000; i++) {
+        Matrix4 model;
+        model = glm::translate(model, Vector3(
+                (rand() % 100 - 50) * 3,
+                0,
+                (rand() % 100 - 50) * 3
+        ));
+        mvps[i] = combined * model;
+    }
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    const float vertices[] = {
+    const float positions[] = {
             -1.0f, -1.0f, -1.0f,
             -1.0f, -1.0f, 1.0f,
             -1.0f, 1.0f, 1.0f,
@@ -105,30 +110,46 @@ void RenderSystem::initialize() {
             0.982f, 0.099f, 0.879f
     };
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    unsigned POSITION_LOCATION = 0;
+    unsigned COLOR_LOCATION = 1;
+    unsigned MVP_LOCATION = 2;
 
-    glGenBuffers(1, &cbo);
-    glBindBuffer(GL_ARRAY_BUFFER, cbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+    glGenVertexArrays(1, &vertexArray);
+    glBindVertexArray(vertexArray);
+
+    glGenBuffers(1, &positionAttributeBuffer);
+    glGenBuffers(1, &colorAttributeBuffer);
+    glGenBuffers(1, &mvpAttributeBuffer);
+
+    glBindBuffer(GL_ARRAY_BUFFER, positionAttributeBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), &positions[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(POSITION_LOCATION);
+    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, colorAttributeBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), &colors[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(COLOR_LOCATION);
+    glVertexAttribPointer(COLOR_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mvpAttributeBuffer);
+    for (unsigned i = 0; i < 4; ++i) {
+        glEnableVertexAttribArray(MVP_LOCATION + i);
+        glVertexAttribPointer(MVP_LOCATION + i, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4), (const GLvoid*)(sizeof(GLfloat)* i * 4));
+        glVertexAttribDivisor(MVP_LOCATION + i, 1);
+    }
+
+    glBindVertexArray(0);
 }
 
 void RenderSystem::render() {
     gl::clear();
 
-    glUniformMatrix4fv(mvp_uniform, 1, GL_FALSE, &mvp[0][0]);
+    glBindBuffer(GL_ARRAY_BUFFER, mvpAttributeBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mvps), &mvps[0], GL_DYNAMIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glBindVertexArray(vertexArray);
 
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, cbo);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 12*3, 10000);
 
-    glDrawArrays(GL_TRIANGLES, 0, 12*3);
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glBindVertexArray(0);
 }

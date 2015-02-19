@@ -13,12 +13,10 @@ public:
 
     Camera* camera;
 
-    Matrix4 model;
-    Matrix4 mvp;
+    unsigned vertexArray;
+    unsigned positionAttributeBuffer;
+    unsigned colorAttributeBuffer;
+    unsigned mvpAttributeBuffer;
 
-    unsigned mvp_uniform;
-
-    unsigned vao;
-    unsigned vbo, cbo;
-    unsigned ibo;
+    Matrix4 mvps[10000];
 };

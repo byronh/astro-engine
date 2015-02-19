@@ -26,6 +26,7 @@ namespace gl {
     // Shader program functions
     unsigned create_program(void);
     void delete_program(unsigned handle);
+    int get_attribute_location(unsigned program_handle, const char* name);
     int get_uniform_location(unsigned program_handle, const char* name);
     void link_program(unsigned handle);
     void use_program(unsigned handle);

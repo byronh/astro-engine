@@ -21,12 +21,12 @@ class ExampleGame(ApplicationListener, InputListener):
         self.app.set_input_listener(self)
         self.render_system.initialize()
 
-        vert = path.join('shaders', 'basic.vert.glsl')
-        frag = path.join('shaders', 'basic.frag.glsl')
+        vert = path.join('shaders', 'instanced.vert.glsl')
+        frag = path.join('shaders', 'instanced.frag.glsl')
         shader = self.render_system.load_shader(vert, frag)
         shader.begin()
         print("Handle: {}".format(shader.handle))
-        print("MVP uniform: {}".format(shader.get_uniform_location("MVP")))
+        print("MVP attribute: {}".format(shader.get_attribute_location("MVP")))
 
     def destroy(self):
         self.render_system.cleanup()
@@ -43,8 +43,8 @@ class ExampleGame(ApplicationListener, InputListener):
 if __name__ == '__main__':
     config = ApplicationConfig()
     config.title = "Example Game"
-    config.width = 800
-    config.height = 600
+    config.width = 1366
+    config.height = 768
     config.samples = 8
 
     app = Application(ExampleGame(), config)
