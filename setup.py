@@ -1,3 +1,4 @@
+from Cython.Build import cythonize
 from distutils.command.build import build
 from multiprocessing import pool
 from setuptools import Extension, setup
@@ -18,19 +19,27 @@ def main():
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
+    # core = Extension(
+    #     extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
+    #     name='astro.cython.window',
+    #     libraries=['glfw'],
+    #     # include_dirs=['src'],
+    #     sources=['astro/cython/window.pyx']
+    # )
+
     ecs = GameModule(
         name='ecs',
-        sources=['core/entity_manager.cpp', 'core/entity_manager_py.cpp']
+        sources=['src/core/entity_manager.cpp', 'src/core/entity_manager_py.cpp']
     )
 
     graphics = GameModule(
         name='graphics',
         sources=[
-            'graphics/camera.cpp',
-            'graphics/gl.cpp',
-            'graphics/render_system.cpp',
-            'graphics/shader.cpp',
-            'swig/graphics.i'
+            'src/graphics/camera.cpp',
+            'src/graphics/gl.cpp',
+            'src/graphics/render_system.cpp',
+            'src/graphics/shader.cpp',
+            'src/swig/graphics.i'
         ],
         swig=True,
         libraries=['GLEW']
@@ -38,7 +47,7 @@ def main():
 
     window = GameModule(
         name='window',
-        sources=['window/window.c', 'window/window_py.c'],
+        sources=['src/window/window.c', 'src/window/window_py.c'],
         libraries=['glfw'],
         cpp=False
     )
@@ -50,7 +59,8 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=[ecs, graphics, window]
+        ext_modules=[ecs, graphics, window],
+        # ext_modules=cythonize(core),
     )
 
 
@@ -74,7 +84,7 @@ class GameModule(Extension):
             name = '{}.native.{}'.format(PROJECT_NAME, name)
         super().__init__(
             name=name,
-            sources=['src/{}'.format(file) for file in sources],
+            sources=sources,
             include_dirs=['src'] + extra_include_dirs,
             libraries=libraries,
             extra_compile_args=extra_compile_args,

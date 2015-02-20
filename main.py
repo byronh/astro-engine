@@ -54,3 +54,25 @@ if __name__ == '__main__':
 
     app = Application(ExampleGame(), config)
     app.run()
+
+# from astro.application import ApplicationConfig
+# from astro.cython import window
+#
+#
+# if __name__ == '__main__':
+#     config = ApplicationConfig()
+#     config.title = "Example Game"
+#     config.width = 1366
+#     config.height = 768
+#     config.samples = 8
+#
+#     w1 = window.Window(config)
+#     w1.create()
+#
+#     w1.poll_events()
+#     w1.swap_buffers()
+#
+#     import time
+#     time.sleep(2)
+#
+#     print("after")
