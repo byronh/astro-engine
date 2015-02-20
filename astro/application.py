@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from astro.graphics.window import Window
+from astro.cython import window
 from astro.input import InputListener
 
 
@@ -15,26 +15,30 @@ class Application:
     def __init__(self, application_listener, config: ApplicationConfig):
         self.config = config
         self.application_listener = application_listener
+        self.application_listener.app = self
         self.input_listener = None
         self.running = False
-        application_listener.app = self
+        self.window = window.Window(self.config)
 
     def run(self):
-        window = Window(self)
+        self.window.create()
+
+        window.set_frame_buffer_callback(self.window, self.application_listener.resize)
+        window.set_key_callback(self.window, self.on_key_event)
+
         self.running = True
         self.application_listener.create()
         self.application_listener.resize(self.config.width, self.config.height)
 
         while self.running:
-            window.poll_events()
+            self.window.poll_events()
 
             self.application_listener.update(delta_time=0)
             self.application_listener.render()
 
-            window.swap_buffers()
+            self.window.swap_buffers()
 
         self.application_listener.destroy()
-        del window
 
     def exit(self):
         self.running = False

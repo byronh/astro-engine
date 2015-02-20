@@ -19,13 +19,12 @@ def main():
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
-    # core = Extension(
-    #     extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
-    #     name='astro.cython.window',
-    #     libraries=['glfw'],
-    #     # include_dirs=['src'],
-    #     sources=['astro/cython/window.pyx']
-    # )
+    window = Extension(
+        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
+        name='astro.cython.window',
+        libraries=['glfw'],
+        sources=['astro/cython/window.pyx']
+    )
 
     ecs = GameModule(
         name='ecs',
@@ -45,13 +44,6 @@ def main():
         libraries=['GLEW']
     )
 
-    window = GameModule(
-        name='window',
-        sources=['src/window/window.c', 'src/window/window_py.c'],
-        libraries=['glfw'],
-        cpp=False
-    )
-
     setup(
         cmdclass={'build': SwigBuild, 'install': SwigInstall},
         name=PROJECT_NAME,
@@ -59,8 +51,7 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=[ecs, graphics, window],
-        # ext_modules=cythonize(core),
+        ext_modules=cythonize(window) + [ecs, graphics],
     )
 
 

@@ -23,12 +23,8 @@ file(GLOB_RECURSE graphics_sources graphics/*.cpp)
 add_library(graphics SHARED ${graphics_sources})
 target_link_libraries(graphics ${GLEW_LIBRARY})
 
-# Platform abstraction layer
-add_library(window SHARED window/window.c)
-target_link_libraries(window ${GLFW_LIBRARIES})
-
 
 # Main executable - for testing purposes only
 set(SOURCE_FILES main.cpp)
 add_executable(main ${SOURCE_FILES})
-target_link_libraries(main core window)
+target_link_libraries(main core graphics)
