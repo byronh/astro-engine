@@ -1,5 +1,6 @@
 from astro.application import Application, ApplicationConfig, ApplicationListener
 from astro.core.entity_manager import EntityManager
+from astro.core.math import Matrix4, Vector3
 from astro.graphics.render_system import RenderSystem
 from astro.graphics.viewport import Viewport
 from astro.input import InputListener, Keys
@@ -13,10 +14,9 @@ class ExampleGame(ApplicationListener, InputListener):
         self.entities = EntityManager()
         self.renderer = RenderSystem()
         self.viewport = Viewport()
-        # self.camera = Camera(
-        #     Matrix4.perspective(45.0, 16.0 / 9.0, 0.1, 100.0),
-        #     Matrix4.look_at(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0))
-        # )
+
+        projection = Matrix4.perspective(45, 16 / 9, 0.1, 100)
+        view = Matrix4.look_at(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0))
 
     def create(self):
         self.app.set_input_listener(self)
