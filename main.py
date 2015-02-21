@@ -1,6 +1,8 @@
 from astro.application import Application, ApplicationConfig, ApplicationListener
 from astro.core.entitymanager import EntityManager
-from astro.core.math import Matrix4, Vector3
+from astro.math.matrix import Matrix4
+from astro.math.vector import Vector3
+from astro.graphics.camera import Camera
 from astro.graphics.render_system import RenderSystem
 from astro.graphics.viewport import Viewport
 from astro.input import InputListener, Keys
@@ -8,15 +10,16 @@ from os import path
 
 
 class ExampleGame(ApplicationListener, InputListener):
-
     def __init__(self):
         super().__init__()
         self.entities = EntityManager()
         self.renderer = RenderSystem()
         self.viewport = Viewport()
 
-        projection = Matrix4.perspective(45, 16 / 9, 0.1, 100)
-        view = Matrix4.look_at(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0))
+        self.cam = Camera(
+            projection=Matrix4.perspective(45, 16 / 9, 0.1, 100),
+            view=Matrix4.look_at(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0))
+        )
 
     def create(self):
         self.app.set_input_listener(self)

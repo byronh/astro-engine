@@ -23,17 +23,39 @@ def main():
         extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
         extra_link_args=["-g"],
         include_dirs=['src'],
+        language='c++',
         name='astro.core.entitymanager',
-        sources=['astro/core/entitymanager.pyx'],
+        sources=['astro/core/entitymanager.pyx', 'src/core/entitymanager.cpp'],
         undef_macros=['NDEBUG']
     )
 
-    math = Extension(
+    camera = Extension(
         extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
         extra_link_args=["-g"],
         include_dirs=['src'],
-        name='astro.core.math',
-        sources=['astro/core/math.pyx'],
+        language='c++',
+        name='astro.graphics.camera',
+        sources=['astro/math/matrix.pyx', 'astro/graphics/camera.pyx', 'src/graphics/camera.cpp'],
+        undef_macros=['NDEBUG']
+    )
+
+    vector = Extension(
+        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=["-g"],
+        include_dirs=['src'],
+        language='c++',
+        name='astro.math.vector',
+        sources=['astro/math/vector.pyx'],
+        undef_macros=['NDEBUG']
+    )
+
+    matrix = Extension(
+        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=["-g"],
+        include_dirs=['src'],
+        language='c++',
+        name='astro.math.matrix',
+        sources=['astro/math/matrix.pyx'],
         undef_macros=['NDEBUG']
     )
 
@@ -66,7 +88,7 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=cythonize([entity_manager, math, window]) + [graphics],
+        ext_modules=cythonize([entity_manager, camera, vector, matrix, window]) + [graphics],
     )
 
 
