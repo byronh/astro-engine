@@ -1,4 +1,4 @@
-cdef extern from "core/entity_manager.h":
+cdef extern from "core/entitymanager.h":
 
     cppclass EntityManager:
         EntityManager()

@@ -14,7 +14,7 @@ include_directories(${GLFW_INCLUDE_DIR})
 
 
 # Entity-component system
-add_library(core SHARED core/entity_manager.cpp)
+add_library(core SHARED core/entitymanager.cpp)
 
 # Graphics system
 file(GLOB_RECURSE graphics_sources graphics/*.cpp)

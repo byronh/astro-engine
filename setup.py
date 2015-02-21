@@ -23,8 +23,8 @@ def main():
         extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
         extra_link_args=["-g"],
         include_dirs=['src'],
-        name='astro.core.entity_manager',
-        sources=['astro/core/entity_manager.pyx'],
+        name='astro.core.entitymanager',
+        sources=['astro/core/entitymanager.pyx'],
         undef_macros=['NDEBUG']
     )
 
@@ -51,7 +51,7 @@ def main():
         sources=[
             'src/graphics/camera.cpp',
             'src/graphics/gl.cpp',
-            'src/graphics/render_system.cpp',
+            'src/graphics/rendersystem.cpp',
             'src/graphics/shader.cpp',
             'src/swig/graphics.i'
         ],

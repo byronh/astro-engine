@@ -1,8 +1,8 @@
 %module graphics
 %{
-    #include "../graphics/render_system.h"
+    #include "../graphics/rendersystem.h"
     #include "../graphics/shader.h"
 %}
 
-%include "../graphics/render_system.h"
+%include "../graphics/rendersystem.h"
 %include "../graphics/shader.h"

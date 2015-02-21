@@ -1,5 +1,5 @@
 from astro.application import Application, ApplicationConfig, ApplicationListener
-from astro.core.entity_manager import EntityManager
+from astro.core.entitymanager import EntityManager
 from astro.core.math import Matrix4, Vector3
 from astro.graphics.render_system import RenderSystem
 from astro.graphics.viewport import Viewport

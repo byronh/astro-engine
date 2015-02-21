@@ -1,14 +1,14 @@
 # distutils: language = c++
-# distutils: sources = src/core/entity_manager.cpp
+# distutils: sources = src/core/entitymanager.cpp
 
-cimport centity_manager
+cimport c_entitymanager
 
 
 cdef class EntityManager:
-    cdef centity_manager.EntityManager* this_ptr
+    cdef c_entitymanager.EntityManager* this_ptr
 
     def __cinit__(self):
-        self.this_ptr = new centity_manager.EntityManager()
+        self.this_ptr = new c_entitymanager.EntityManager()
 
     def __dealloc__(self):
         del self.this_ptr
