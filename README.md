@@ -1,5 +1,5 @@
 ## astro-engine
-(Work in-progress) a small game engine written in C, C++, and Python 3.
+(Work in-progress) a small game engine written in C++ and Cython.
 
 ### Installation
 
@@ -8,9 +8,10 @@
 git clone https://github.com/byronh/astro-engine.git
 ```
 
-#####2. Install required native libraries:
+#####2. Install required dependencies:
 ```
-pacman -S glew glfw glm swig
+pacman -S glew glfw glm
+pip install cython
 ```
 
 #####3. Install python package:

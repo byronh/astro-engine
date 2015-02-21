@@ -59,6 +59,29 @@ def main():
         undef_macros=['NDEBUG']
     )
 
+    rendersystem = Extension(
+        extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=['-std=c++14', '-g'],
+        include_dirs=['src'],
+        language='c++',
+        libraries=['GLEW'],
+        name='astro.graphics.rendersystem',
+        sources=['astro/graphics/rendersystem.pyx', 'src/graphics/rendersystem.cpp', 'src/graphics/camera.cpp',
+                 'src/graphics/gl.cpp'],
+        undef_macros=['NDEBUG']
+    )
+
+    shader = Extension(
+        extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=['-std=c++14', '-g'],
+        include_dirs=['src'],
+        language='c++',
+        libraries=['GLEW'],
+        name='astro.graphics.shader',
+        sources=['astro/graphics/shader.pyx', 'src/graphics/shader.cpp', 'src/graphics/gl.cpp'],
+        undef_macros=['NDEBUG']
+    )
+
     window = Extension(
         extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
         extra_link_args=["-g"],
@@ -68,19 +91,6 @@ def main():
         undef_macros=['NDEBUG']
     )
 
-    graphics = GameModule(
-        name='graphics',
-        sources=[
-            'src/graphics/camera.cpp',
-            'src/graphics/gl.cpp',
-            'src/graphics/rendersystem.cpp',
-            'src/graphics/shader.cpp',
-            'src/swig/graphics.i'
-        ],
-        swig=True,
-        libraries=['GLEW']
-    )
-
     setup(
         cmdclass={'build': SwigBuild, 'install': SwigInstall},
         name=PROJECT_NAME,
@@ -88,7 +98,7 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=cythonize([entity_manager, camera, vector, matrix, window]) + [graphics],
+        ext_modules=cythonize([entity_manager, camera, vector, matrix, rendersystem, shader, window])
     )
 
 
@@ -143,7 +153,7 @@ def parallel_compile(self, sources, output_dir=None, macros=None, include_dirs=N
     macros, objects, extra, opts, builds = self._setup_compile(output_dir, macros, include_dirs, sources,
                                                                depends, extra_postargs)
     cc_args = self._get_cc_args(opts, debug, extra_preargs)
-    num_threads = 4
+    num_threads = 8
 
     def single_compile(obj):
         if obj in builds:

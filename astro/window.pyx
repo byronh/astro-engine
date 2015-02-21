@@ -44,7 +44,7 @@ cdef object frame_buffer_callback
 cdef void on_frame_buffer_resize(cwindow.Window* window, int width, int height):
     frame_buffer_callback(width, height)
 
-cdef object key_callback;
+cdef object key_callback
 cdef void on_key_event(cwindow.Window* window, int key, int scancode, int action, int mods):
     key_callback(key, action)
 

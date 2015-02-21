@@ -3,7 +3,8 @@ from astro.core.entitymanager import EntityManager
 from astro.math.matrix import Matrix4
 from astro.math.vector import Vector3
 from astro.graphics.camera import Camera
-from astro.graphics.render_system import RenderSystem
+from astro.graphics.rendersystem import RenderSystem
+from astro.graphics.shader import Shader
 from astro.graphics.viewport import Viewport
 from astro.input import InputListener, Keys
 from os import path
@@ -13,7 +14,7 @@ class ExampleGame(ApplicationListener, InputListener):
     def __init__(self):
         super().__init__()
         self.entities = EntityManager()
-        self.renderer = RenderSystem()
+        self.renderer = None
         self.viewport = Viewport()
 
         self.cam = Camera(
@@ -23,19 +24,17 @@ class ExampleGame(ApplicationListener, InputListener):
 
     def create(self):
         self.app.set_input_listener(self)
-        self.renderer.initialize()
+        self.renderer = RenderSystem(self.cam)
 
         player = self.entities.create()
 
         vert = path.join('shaders', 'instanced.vert.glsl')
         frag = path.join('shaders', 'instanced.frag.glsl')
-        shader = self.renderer.load_shader(vert, frag)
+        shader = Shader(vert, frag)
         shader.begin()
-        print("Handle: {}".format(shader.handle))
-        print("MVP attribute: {}".format(shader.get_attribute_location("MVP")))
 
-    def destroy(self):
-        self.renderer.cleanup()
+        # print("Handle: {}".format(shader.handle))
+        # print("MVP attribute: {}".format(shader.get_attribute_location("MVP")))
 
     def render(self):
         self.renderer.render()

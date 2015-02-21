@@ -5,8 +5,6 @@
 
 
 RenderSystem::~RenderSystem() {
-    delete camera;
-
     glDeleteBuffers(1, &vertexArray);
     glDeleteBuffers(1, &positionAttributeBuffer);
     glDeleteBuffers(1, &colorAttributeBuffer);
@@ -16,11 +14,6 @@ RenderSystem::~RenderSystem() {
 void RenderSystem::initialize() {
     gl::initialize();
     gl::set_clear_color(Color{0.1, 0.1, 0.1, 1.0});
-
-    camera = new Camera(
-            glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 100.0f),
-            glm::lookAt(glm::vec3(16, 12, 12), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
-    );
 
     Matrix4 combined = camera->projection * camera->view;
     for (unsigned i = 0; i < 10000; i++) {

@@ -20,9 +20,3 @@ add_library(core SHARED core/entitymanager.cpp)
 file(GLOB_RECURSE graphics_sources graphics/*.cpp)
 add_library(graphics SHARED ${graphics_sources})
 target_link_libraries(graphics ${GLEW_LIBRARY})
-
-
-# Main executable - for testing purposes only
-set(SOURCE_FILES main.cpp)
-add_executable(main ${SOURCE_FILES})
-target_link_libraries(main core graphics)
