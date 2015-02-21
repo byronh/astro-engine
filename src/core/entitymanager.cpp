@@ -1,4 +1,4 @@
-#include "core/entity_manager.h"
+#include "entitymanager.h"
 #include <assert.h>
 
 
