@@ -1,9 +1,8 @@
 from astro.application import Application, ApplicationConfig, ApplicationListener
-from astro.ecs import EntityManager
+from astro.core.entity_manager import EntityManager
 from astro.graphics.render_system import RenderSystem
 from astro.graphics.viewport import Viewport
 from astro.input import InputListener, Keys
-# from astro.native.graphics import Camera, Vector3, Matrix4
 from os import path
 
 
@@ -11,8 +10,8 @@ class ExampleGame(ApplicationListener, InputListener):
 
     def __init__(self):
         super().__init__()
-        self.entity_manager = EntityManager()
-        self.render_system = RenderSystem()
+        self.entities = EntityManager()
+        self.renderer = RenderSystem()
         self.viewport = Viewport()
         # self.camera = Camera(
         #     Matrix4.perspective(45.0, 16.0 / 9.0, 0.1, 100.0),
@@ -21,21 +20,22 @@ class ExampleGame(ApplicationListener, InputListener):
 
     def create(self):
         self.app.set_input_listener(self)
-        self.render_system.initialize()
+        self.renderer.initialize()
+
+        player = self.entities.create()
 
         vert = path.join('shaders', 'instanced.vert.glsl')
         frag = path.join('shaders', 'instanced.frag.glsl')
-        shader = self.render_system.load_shader(vert, frag)
+        shader = self.renderer.load_shader(vert, frag)
         shader.begin()
         print("Handle: {}".format(shader.handle))
         print("MVP attribute: {}".format(shader.get_attribute_location("MVP")))
 
     def destroy(self):
-        self.render_system.cleanup()
-        self.entity_manager.cleanup()
+        self.renderer.cleanup()
 
     def render(self):
-        self.render_system.render()
+        self.renderer.render()
 
     def resize(self, width: int, height: int):
         self.viewport.resize(width, height)

@@ -19,16 +19,31 @@ def main():
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
-    window = Extension(
+    entity_manager = Extension(
         extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
-        name='astro.cython.window',
-        libraries=['glfw'],
-        sources=['astro/cython/window.pyx']
+        extra_link_args=["-g"],
+        include_dirs=['src'],
+        name='astro.core.entity_manager',
+        sources=['astro/core/entity_manager.pyx'],
+        undef_macros=['NDEBUG']
     )
 
-    ecs = GameModule(
-        name='ecs',
-        sources=['src/core/entity_manager.cpp', 'src/core/entity_manager_py.cpp']
+    math = Extension(
+        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=["-g"],
+        include_dirs=['src'],
+        name='astro.core.math',
+        sources=['astro/core/math.pyx'],
+        undef_macros=['NDEBUG']
+    )
+
+    window = Extension(
+        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=["-g"],
+        name='astro.window',
+        libraries=['glfw'],
+        sources=['astro/window.pyx'],
+        undef_macros=['NDEBUG']
     )
 
     graphics = GameModule(
@@ -51,7 +66,7 @@ def main():
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=cythonize(window) + [ecs, graphics],
+        ext_modules=cythonize([entity_manager, math, window]) + [graphics],
     )
 
 

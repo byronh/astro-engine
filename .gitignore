@@ -6,7 +6,8 @@ __pycache__/
 *.py[cod]
 *.so
 *_wrap.*
-astro/*/*.c
+astro/**/*.c
+astro/**/*.cpp
 astro/native/*
 !astro/native/__init__.py
 src/CMakeLists.txt.user

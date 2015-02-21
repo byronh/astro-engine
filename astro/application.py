@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from astro.cython import window
+from astro import window
 from astro.input import InputListener
 
 

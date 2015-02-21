@@ -6,7 +6,7 @@ cdef class Window:
     cdef cwindow.Window* window
 
     def __dealloc__(self):
-        cwindow.destroy(<cwindow.Window*>self.window)
+        cwindow.destroy(self.window)
 
     def __init__(self, config):
         self.config = config
@@ -26,7 +26,7 @@ cdef class Window:
             cwindow.hint(cwindow.SAMPLES, self.config.samples)
 
         self.window = cwindow.create(self.config.width, self.config.height, c_title, NULL, NULL)
-        cwindow.make_context_current(<cwindow.Window*>self.window)
+        cwindow.make_context_current(self.window)
         cwindow.swap_interval(1)
 
     def poll_events(self):
@@ -56,9 +56,9 @@ def set_error_callback(Window window, callback):
 def set_frame_buffer_callback(Window window, callback):
     global frame_buffer_callback
     frame_buffer_callback = callback
-    cwindow.set_resize_callback(<cwindow.Window*>window.window, on_frame_buffer_resize)
+    cwindow.set_resize_callback(window.window, on_frame_buffer_resize)
 
 def set_key_callback(Window window, callback):
     global key_callback
     key_callback = callback
-    cwindow.set_key_callback(<cwindow.Window*>window.window, on_key_event)
+    cwindow.set_key_callback(window.window, on_key_event)
