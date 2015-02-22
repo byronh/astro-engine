@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/math.h"
+
 
 typedef struct Color {
     float r;
@@ -26,8 +28,6 @@ namespace gl {
     // Shader program functions
     unsigned create_program(void);
     void delete_program(unsigned handle);
-    int get_attribute_location(unsigned program_handle, const char* name);
-    int get_uniform_location(unsigned program_handle, const char* name);
     void link_program(unsigned handle);
     void use_program(unsigned handle);
     void validate_program(unsigned handle);
@@ -38,8 +38,9 @@ namespace gl {
     void delete_shader(unsigned handle);
     void detach_shader(unsigned program_handle, unsigned shader_handle);
 
-    // Vertex array functions
-
-    // Vertex buffer functions
+    // Attributes and uniforms
+    int get_attribute_location(unsigned program_handle, const char* name);
+    int get_uniform_location(unsigned program_handle, const char* name);
+    void set_uniform_matrix(int location, Matrix4& matrix);
 
 }

@@ -19,7 +19,7 @@ class ExampleGame(ApplicationListener, InputListener):
 
         self.cam = Camera(
             projection=Matrix4.perspective(45, 16 / 9, 0.1, 100),
-            view=Matrix4.look_at(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0))
+            view=Matrix4.look_at(Vector3(16, 9, 9), Vector3(0, 0, 0), Vector3(0, 1, 0))
         )
 
     def create(self):
@@ -32,9 +32,7 @@ class ExampleGame(ApplicationListener, InputListener):
         frag = path.join('shaders', 'instanced.frag.glsl')
         shader = Shader(vert, frag)
         shader.begin()
-
-        # print("Handle: {}".format(shader.handle))
-        # print("MVP attribute: {}".format(shader.get_attribute_location("MVP")))
+        print('Uniform location: {}'.format(shader.get_uniform_location('u_combined')))
 
     def render(self):
         self.renderer.render()

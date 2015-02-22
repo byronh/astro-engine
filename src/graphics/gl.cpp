@@ -1,7 +1,7 @@
 #include "graphics/gl.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <GL/glew.h>
+#include <glm/gtc/type_ptr.hpp>
 
 
 namespace gl {
@@ -40,24 +40,6 @@ namespace gl {
 
     void delete_program(unsigned handle) {
         glDeleteProgram(handle);
-    }
-
-    int get_attribute_location(unsigned program_handle, const char* name) {
-        GLint location = glGetAttribLocation(program_handle, name);
-        if (location == -1) {
-            fprintf(stderr, "Invalid uniform location\n");
-            exit(EXIT_FAILURE);
-        }
-        return location;
-    }
-
-    int get_uniform_location(unsigned program_handle, const char* name) {
-        GLint location = glGetUniformLocation(program_handle, name);
-        if (location == -1) {
-            fprintf(stderr, "Invalid uniform location\n");
-            exit(EXIT_FAILURE);
-        }
-        return location;
     }
 
     void link_program(unsigned handle) {
@@ -151,5 +133,28 @@ namespace gl {
 
     void detach_shader(unsigned program_handle, unsigned shader_handle) {
         glDetachShader(program_handle, shader_handle);
+    }
+
+    int get_attribute_location(unsigned program_handle, const char* name) {
+        GLint location = glGetAttribLocation(program_handle, name);
+        if (location == -1) {
+            fprintf(stderr, "Invalid uniform location\n");
+            exit(EXIT_FAILURE);
+        }
+        return location;
+    }
+
+    int get_uniform_location(unsigned program_handle, const char* name) {
+        GLint location = glGetUniformLocation(program_handle, name);
+        if (location == -1) {
+            fprintf(stderr, "Invalid uniform location\n");
+            exit(EXIT_FAILURE);
+        }
+        return location;
+    }
+
+
+    void set_uniform_matrix(int location, Matrix4& matrix) {
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 }

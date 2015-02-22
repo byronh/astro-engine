@@ -29,3 +29,6 @@ cdef class Shader:
 
     def begin(self):
         self.s.begin()
+
+    def get_uniform_location(self, name):
+        return self.s.get_uniform_location(name.encode('utf-8'))

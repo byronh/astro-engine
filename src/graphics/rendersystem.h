@@ -1,6 +1,8 @@
 #pragma once
 
 #include "graphics/camera.h"
+#include "graphics/model.h"
+#include "graphics/renderer.h"
 #include "core/math.h"
 
 
@@ -12,11 +14,5 @@ public:
     void render();
 
     Camera* camera;
-
-    unsigned vertexArray;
-    unsigned positionAttributeBuffer;
-    unsigned colorAttributeBuffer;
-    unsigned mvpAttributeBuffer;
-
-    Matrix4 mvps[10000];
+    Renderer r;
 };

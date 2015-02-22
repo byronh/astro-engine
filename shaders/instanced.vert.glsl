@@ -2,11 +2,13 @@
 
 layout(location = 0) in vec3 vertexPosition_modelspace;
 layout(location = 1) in vec3 vertexColor;
-layout(location = 2) in mat4 MVP;
+layout(location = 2) in mat4 a_world;
+
+uniform mat4 u_combined;
 
 out vec3 fragmentColor;
 
 void main() {
-    gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
+    gl_Position = u_combined * a_world * vec4(vertexPosition_modelspace, 1);
     fragmentColor = vertexColor;
 }

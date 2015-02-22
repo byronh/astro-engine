@@ -19,9 +19,10 @@ def main():
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
+    # TODO clean this up
     entity_manager = Extension(
-        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=["-g"],
+        extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=['-std=c++14', "-g"],
         include_dirs=['src'],
         language='c++',
         name='astro.core.entitymanager',
@@ -30,8 +31,8 @@ def main():
     )
 
     camera = Extension(
-        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=["-g"],
+        extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=['-std=c++14', "-g"],
         include_dirs=['src'],
         language='c++',
         name='astro.graphics.camera',
@@ -40,8 +41,8 @@ def main():
     )
 
     vector = Extension(
-        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=["-g"],
+        extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=['-std=c++14', "-g"],
         include_dirs=['src'],
         language='c++',
         name='astro.math.vector',
@@ -50,8 +51,8 @@ def main():
     )
 
     matrix = Extension(
-        extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=["-g"],
+        extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
+        extra_link_args=['-std=c++14', "-g"],
         include_dirs=['src'],
         language='c++',
         name='astro.math.matrix',
@@ -67,7 +68,7 @@ def main():
         libraries=['GLEW'],
         name='astro.graphics.rendersystem',
         sources=['astro/graphics/rendersystem.pyx', 'src/graphics/rendersystem.cpp', 'src/graphics/camera.cpp',
-                 'src/graphics/gl.cpp'],
+                 'src/graphics/gl.cpp', 'src/graphics/renderer.cpp', 'src/graphics/model.cpp'],
         undef_macros=['NDEBUG']
     )
 
