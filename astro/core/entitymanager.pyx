@@ -10,11 +10,11 @@ cdef class EntityManager:
     def __dealloc__(self):
         del self.this_ptr
 
-    def create(self) -> int:
+    def create(self):
         return self.this_ptr.create()
 
     def destroy(self, unsigned int entity_id):
         self.this_ptr.destroy(entity_id)
 
-    def exists(self, unsigned int entity_id) -> bool:
+    def exists(self, unsigned int entity_id):
         return self.this_ptr.exists(entity_id)

@@ -10,12 +10,13 @@ cdef extern from "graphics/camera.h":
         Camera(const c_math.Matrix4& projection, const c_math.Matrix4& view)
 
 
-cdef extern from "graphics/rendersystem.h":
+cdef extern from "graphics/renderer.h":
 
-    cppclass RenderSystem:
-        Camera* camera
+    cppclass Renderer:
+        void add_component(unsigned int entity_id, unsigned int model_id, c_math.Matrix4 transform)
         void initialize()
-        void render()
+        void render(Camera* camera)
+        void shutdown()
 
 
 cdef extern from "graphics/shader.h":

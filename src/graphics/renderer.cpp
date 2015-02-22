@@ -5,6 +5,10 @@
 
 void Renderer::initialize() {
 
+    // TODO move these somewhere else
+    gl::initialize();
+    gl::set_clear_color(Color{0.1, 0.1, 0.1, 1.0});
+
     // TODO make resizable
     unsigned int size = Renderer::max_instances;
     size_t bytes_per_instance = sizeof(unsigned int) + sizeof(unsigned int) + sizeof(Matrix4);
@@ -19,13 +23,13 @@ void Renderer::initialize() {
     // TODO make AssetManager class to manage lifetime
     this->models[0] = new Model();
 
-    for (int x = -16; x < 16; x++) {
-        for (int z = -16; z < 16; z++) {
-            Matrix4 transform;
-            transform = glm::translate(transform, Vector3(x * 2.5, 0, z * 2.5));
-            this->add_component(0, 0, transform);
-        }
-    }
+//    for (int x = -16; x < 16; x++) {
+//        for (int z = -16; z < 16; z++) {
+//            Matrix4 transform;
+//            transform = glm::translate(transform, Vector3(x * 2.5, 0, z * 2.5));
+//            this->add_component(0, 0, transform);
+//        }
+//    }
 }
 
 void Renderer::add_component(unsigned int entity_id, unsigned int model_id, Matrix4 transform) {
@@ -38,6 +42,9 @@ void Renderer::add_component(unsigned int entity_id, unsigned int model_id, Matr
 }
 
 void Renderer::render(Camera* camera) {
+    gl::clear();
+
+    // TODO move to camera class
     Matrix4 combined = camera->projection * camera->view;
     gl::set_uniform_matrix(0, combined);
 

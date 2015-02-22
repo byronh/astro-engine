@@ -10,8 +10,6 @@ class Renderer {
 public:
     static const unsigned int max_instances = 1024;
 
-    Renderer() {}
-
     void add_component(unsigned int entity_id, unsigned int model_id, Matrix4 transform);
     void initialize();
     void render(Camera* camera);

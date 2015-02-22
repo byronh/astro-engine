@@ -1,8 +1,6 @@
 from Cython.Build import cythonize
-from distutils.command.build import build
 from multiprocessing import pool
 from setuptools import Extension, setup
-from setuptools.command.install import install
 import distutils.ccompiler
 import os
 import subprocess
@@ -22,7 +20,7 @@ def main():
     # TODO clean this up
     entity_manager = Extension(
         extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=['-std=c++14', "-g"],
+        extra_link_args=['-std=c++14', '-g'],
         include_dirs=['src'],
         language='c++',
         name='astro.core.entitymanager',
@@ -32,7 +30,7 @@ def main():
 
     camera = Extension(
         extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=['-std=c++14', "-g"],
+        extra_link_args=['-std=c++14', '-g'],
         include_dirs=['src'],
         language='c++',
         name='astro.graphics.camera',
@@ -42,7 +40,7 @@ def main():
 
     vector = Extension(
         extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=['-std=c++14', "-g"],
+        extra_link_args=['-std=c++14', '-g'],
         include_dirs=['src'],
         language='c++',
         name='astro.math.vector',
@@ -52,7 +50,7 @@ def main():
 
     matrix = Extension(
         extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=['-std=c++14', "-g"],
+        extra_link_args=['-std=c++14', '-g'],
         include_dirs=['src'],
         language='c++',
         name='astro.math.matrix',
@@ -60,15 +58,15 @@ def main():
         undef_macros=['NDEBUG']
     )
 
-    rendersystem = Extension(
+    renderer = Extension(
         extra_compile_args=['-std=c++14', '-Wall', '-Werror', '-Wno-unused-function'],
         extra_link_args=['-std=c++14', '-g'],
         include_dirs=['src'],
         language='c++',
         libraries=['GLEW'],
-        name='astro.graphics.rendersystem',
-        sources=['astro/graphics/rendersystem.pyx', 'src/graphics/rendersystem.cpp', 'src/graphics/camera.cpp',
-                 'src/graphics/gl.cpp', 'src/graphics/renderer.cpp', 'src/graphics/model.cpp'],
+        name='astro.graphics.renderer',
+        sources=['astro/graphics/renderer.pyx', 'src/graphics/camera.cpp', 'src/graphics/gl.cpp',
+                 'src/graphics/renderer.cpp', 'src/graphics/model.cpp'],
         undef_macros=['NDEBUG']
     )
 
@@ -85,7 +83,7 @@ def main():
 
     window = Extension(
         extra_compile_args=['-Wall', '-Werror', '-Wno-unused-function'],
-        extra_link_args=["-g"],
+        extra_link_args=['-g'],
         name='astro.window',
         libraries=['glfw'],
         sources=['astro/window.pyx'],
@@ -93,13 +91,12 @@ def main():
     )
 
     setup(
-        cmdclass={'build': SwigBuild, 'install': SwigInstall},
         name=PROJECT_NAME,
         author='Byron Henze',
         author_email='byronh@gmail.com',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=cythonize([entity_manager, camera, vector, matrix, rendersystem, shader, window])
+        ext_modules=cythonize([entity_manager, camera, vector, matrix, renderer, shader, window])
     )
 
 
@@ -130,22 +127,6 @@ class GameModule(Extension):
             swig_opts=swig_opts,
             undef_macros=undef_macros,
         )
-
-
-class SwigBuild(build):
-    """ Make sure that swig files are generated and copied before the build command """
-
-    def run(self):
-        self.run_command('build_ext')
-        build.run(self)
-
-
-class SwigInstall(install):
-    """ Make sure that swig files are generated and copied before the install command """
-
-    def run(self):
-        self.run_command('build_ext')
-        self.do_egg_install()
 
 
 def parallel_compile(self, sources, output_dir=None, macros=None, include_dirs=None, debug=0, extra_preargs=None,

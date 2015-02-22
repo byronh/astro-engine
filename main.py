@@ -3,7 +3,7 @@ from astro.core.entitymanager import EntityManager
 from astro.math.matrix import Matrix4
 from astro.math.vector import Vector3
 from astro.graphics.camera import Camera
-from astro.graphics.rendersystem import RenderSystem
+from astro.graphics.renderer import Renderer
 from astro.graphics.shader import Shader
 from astro.graphics.viewport import Viewport
 from astro.input import InputListener, Keys
@@ -24,9 +24,12 @@ class ExampleGame(ApplicationListener, InputListener):
 
     def create(self):
         self.app.set_input_listener(self)
-        self.renderer = RenderSystem(self.cam)
 
-        player = self.entities.create()
+        self.renderer = Renderer()
+        self.renderer.initialize()
+
+        entity_id = self.entities.create()
+        self.renderer.add_component(entity_id, 0, Matrix4())
 
         vert = path.join('shaders', 'instanced.vert.glsl')
         frag = path.join('shaders', 'instanced.frag.glsl')
@@ -35,7 +38,10 @@ class ExampleGame(ApplicationListener, InputListener):
         print('Uniform location: {}'.format(shader.get_uniform_location('u_combined')))
 
     def render(self):
-        self.renderer.render()
+        self.renderer.render(self.cam)
+
+    def destroy(self):
+        self.renderer.shutdown()
 
     def resize(self, width: int, height: int):
         self.viewport.resize(width, height)
