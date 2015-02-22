@@ -23,6 +23,8 @@ class Application:
         self.window.create()
 
         window.set_resize_callback(self.window, self.application_listener.resize)
+        window.set_mouse_button_callback(self.window, self.on_mouse_button_event)
+        window.set_mouse_move_callback(self.window, self.on_mouse_move_event)
         window.set_key_callback(self.window, self.on_key_event)
 
         self.application_listener.create()
@@ -51,6 +53,17 @@ class Application:
                 self.input_listener.key_up(key_code)
             elif action == 1:
                 self.input_listener.key_down(key_code)
+
+    def on_mouse_button_event(self, button: int, action: int):
+        if self.input_listener:
+            if action == 0:
+                self.input_listener.mouse_down(button)
+            elif action == 1:
+                self.input_listener.mouse_up(button)
+
+    def on_mouse_move_event(self, x: float, y: float):
+        if self.input_listener:
+            self.input_listener.mouse_move(x, y)
 
 
 class ApplicationListener(metaclass=ABCMeta):

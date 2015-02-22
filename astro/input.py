@@ -3,10 +3,19 @@ from enum import IntEnum, unique
 
 
 class InputListener(metaclass=ABCMeta):
-    def key_down(self, key_code: int):
+    def key_down(self, key_code: int) -> bool:
         return NotImplemented
 
-    def key_up(self, key_code: int):
+    def key_up(self, key_code: int) -> bool:
+        return NotImplemented
+
+    def mouse_down(self, button: int) -> bool:
+        return NotImplemented
+
+    def mouse_move(self, x_pos: float, y_pos: float) -> bool:
+        return NotImplemented
+
+    def mouse_up(self, button: int) -> bool:
         return NotImplemented
 
 
@@ -20,14 +29,29 @@ class InputMultiplexer(InputListener):
     def remove_input_listener(self, input_listener: InputListener):
         self.listeners.remove(input_listener)
 
-    def key_down(self, key_code: int):
+    def key_down(self, key_code: int) -> bool:
         for listener in self.listeners:
             if listener.key_down(key_code):
                 break
 
-    def key_up(self, key_code: int):
+    def key_up(self, key_code: int) -> bool:
         for listener in self.listeners:
             if listener.key_up(key_code):
+                break
+
+    def mouse_down(self, button: int) -> bool:
+        for listener in self.listeners:
+            if listener.mouse_down(button):
+                break
+
+    def mouse_move(self, x_pos: float, y_pos: float) -> bool:
+        for listener in self.listeners:
+            if listener.mouse_move(x_pos, y_pos):
+                break
+
+    def mouse_up(self, button: int) -> bool:
+        for listener in self.listeners:
+            if listener.mouse_up(button):
                 break
 
 

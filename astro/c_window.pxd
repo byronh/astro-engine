@@ -14,9 +14,12 @@ cdef extern from "GLFW/glfw3.h":
     cdef struct Window "GLFWwindow":
         pass
 
+    ctypedef void (*GLFWcursorposfun)(Window*, double, double)
     ctypedef void (*GLFWerrorfun)(int, const char*)
     ctypedef void (*GLFWframebuffersizefun)(Window*, int, int)
     ctypedef void (*GLFWkeyfun)(Window*, int, int, int, int)
+    ctypedef void (*GLFWmousebuttonfun)(Window*,int, int, int)
+    ctypedef void (*GLFWscrollfun)(Window*, double, double)
 
     bint initialize "glfwInit" ()
     void close "glfwSetWindowShouldClose" (Window* window, bint value)
@@ -32,5 +35,8 @@ cdef extern from "GLFW/glfw3.h":
 
     GLFWerrorfun set_error_callback "glfwSetErrorCallback" (GLFWerrorfun cbfun)
     GLFWkeyfun set_key_callback "glfwSetKeyCallback" (Window* window, GLFWkeyfun cbfun)
+    GLFWmousebuttonfun set_mouse_button_callback "glfwSetMouseButtonCallback" (Window* window, GLFWmousebuttonfun cbfun)
+    GLFWcursorposfun set_mouse_move_callback "glfwSetCursorPosCallback" (Window* window, GLFWcursorposfun cbfun)
     GLFWframebuffersizefun set_resize_callback "glfwSetFramebufferSizeCallback" (Window* window,
                                                                                  GLFWframebuffersizefun cbfun)
+    GLFWscrollfun set_scroll_callback "glfwSetScrollCallback" (Window* window, GLFWscrollfun cbfun)

@@ -54,6 +54,14 @@ cdef object key_callback
 cdef void on_key_event(c_window.Window* window, int key, int scancode, int action, int mods):
     key_callback(key, action)
 
+cdef object mouse_button_callback
+cdef void on_mouse_button_event(c_window.Window* window, int button, int action, int mods):
+    mouse_button_callback(button, action)
+
+cdef object mouse_move_callback
+cdef void on_mouse_move_event(c_window.Window* window, double x, double y):
+    mouse_move_callback(x, y)
+
 cdef object resize_callback
 cdef void on_frame_buffer_resize(c_window.Window* window, int width, int height):
     resize_callback(width, height)
@@ -67,6 +75,16 @@ def set_key_callback(Window window, callback):
     global key_callback
     key_callback = callback
     c_window.set_key_callback(window.window, on_key_event)
+
+def set_mouse_button_callback(Window window, callback):
+    global mouse_button_callback
+    mouse_button_callback = callback
+    c_window.set_mouse_button_callback(window.window, on_mouse_button_event)
+
+def set_mouse_move_callback(Window window, callback):
+    global mouse_move_callback
+    mouse_move_callback = callback
+    c_window.set_mouse_move_callback(window.window, on_mouse_move_event)
 
 def set_resize_callback(Window window, callback):
     global resize_callback

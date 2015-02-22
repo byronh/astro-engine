@@ -6,7 +6,7 @@ from astro.graphics.camera import Camera
 from astro.graphics.renderer import Renderer
 from astro.graphics.shader import Shader
 from astro.graphics.viewport import Viewport
-from astro.input import InputListener, Keys
+from astro.input import InputListener, InputMultiplexer, Keys
 from os import path
 
 
@@ -14,6 +14,8 @@ class ExampleGame(ApplicationListener, InputListener):
     def __init__(self):
         super().__init__()
         self.entities = EntityManager()
+        self.multiplexer = InputMultiplexer()
+        self.multiplexer.add_input_listener(self)
         self.renderer = Renderer()
         self.viewport = Viewport()
 
@@ -23,8 +25,7 @@ class ExampleGame(ApplicationListener, InputListener):
         )
 
     def create(self):
-        self.app.set_input_listener(self)
-
+        self.app.set_input_listener(self.multiplexer)
         self.renderer.initialize()
 
         for x in range(-16, 16):
@@ -50,6 +51,9 @@ class ExampleGame(ApplicationListener, InputListener):
     def key_down(self, key_code: int):
         if key_code == Keys.KEY_ESCAPE:
             self.app.exit()
+
+    def mouse_move(self, x_pos: float, y_pos: float) -> bool:
+        print("({:4.1f}, {:4.1f})".format(x_pos, y_pos))
 
 
 if __name__ == '__main__':
