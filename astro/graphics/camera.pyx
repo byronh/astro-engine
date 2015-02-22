@@ -7,6 +7,12 @@ cdef class Camera:
         self.c.projection = projection.m
         self.c.view = view.m
 
+    property combined:
+        def __get__(Camera self):
+            cdef matrix.Matrix4 mat = matrix.Matrix4()
+            mat.m = self.c.projection * self.c.view
+            return mat
+
     property projection:
         def __get__(Camera self):
             cdef matrix.Matrix4 mat = matrix.Matrix4()

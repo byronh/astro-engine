@@ -14,22 +14,23 @@ class ExampleGame(ApplicationListener, InputListener):
     def __init__(self):
         super().__init__()
         self.entities = EntityManager()
-        self.renderer = None
+        self.renderer = Renderer()
         self.viewport = Viewport()
 
         self.cam = Camera(
             projection=Matrix4.perspective(45, 16 / 9, 0.1, 100),
-            view=Matrix4.look_at(Vector3(16, 9, 9), Vector3(0, 0, 0), Vector3(0, 1, 0))
+            view=Matrix4.look_at(Vector3(16, 12, 10), Vector3(0, 0, 0), Vector3(0, 1, 0))
         )
 
     def create(self):
         self.app.set_input_listener(self)
 
-        self.renderer = Renderer()
         self.renderer.initialize()
 
-        entity_id = self.entities.create()
-        self.renderer.add_component(entity_id, 0, Matrix4())
+        for x in range(-16, 16):
+            for z in range(-16, 16):
+                cube = self.entities.create()
+                self.renderer.add_component(cube, 0, Matrix4(Vector3(x * 2.5, 0, z * 2.5)))
 
         vert = path.join('shaders', 'instanced.vert.glsl')
         frag = path.join('shaders', 'instanced.frag.glsl')

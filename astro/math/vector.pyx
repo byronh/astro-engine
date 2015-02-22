@@ -1,6 +1,6 @@
 cdef class Vector3:
 
-    def __init__(self, x=0, y=0, z=0):
+    def __init__(self, float x=0, float y=0, float z=0):
         self.v.x = x
         self.v.y = y
         self.v.z = z

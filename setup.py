@@ -12,19 +12,16 @@ def main():
     """ Build the whole engine as a python package """
 
     module('core.entitymanager', cpp=['core/entitymanager'])
-    module('graphics.camera', cython=['math/matrix'], cpp=['graphics/camera'])
+    module('graphics.camera', cpp=['graphics/camera'])
+    module('math.vector')
+    module('math.matrix')
     module('graphics.renderer',
            cpp=['graphics/camera', 'graphics/gl', 'graphics/model', 'graphics/renderer'],
            libraries=['GLEW'])
     module('graphics.shader', cpp=['graphics/shader', 'graphics/gl'], libraries=['GLEW'])
-    module('math.vector')
-    module('math.matrix')
     module('window', libraries=['glfw'])
 
-    # Fix annoying warnings
     fix_distutils()
-
-    # Speed up compile times
     distutils.ccompiler.CCompiler.compile = parallel_compile
     use_ccache()
 
@@ -35,11 +32,11 @@ def main():
         url='https://github.com/byronh/astro-engine',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=cythonize(_modules)
+        ext_modules=cythonize(all_modules)
     )
 
 
-def module(name: str, cython: list=None, cpp: list=None, libraries: list=None):
+def module(name: str, cpp: list=None, libraries: list=None):
     name = '{}.{}'.format(PROJECT_NAME, name)
 
     extra_compile_args = ['-std=c++14']
@@ -50,8 +47,6 @@ def module(name: str, cython: list=None, cpp: list=None, libraries: list=None):
 
     undef_macros = []
     sources = ['{}.pyx'.format(name.replace('.', '/'))]
-    if cython:
-        sources += ['{}/{}.pyx'.format(PROJECT_NAME, path) for path in cython]
     if cpp:
         sources += ['src/{}.cpp'.format(path) for path in cpp]
     print(name, sources)
@@ -60,7 +55,7 @@ def module(name: str, cython: list=None, cpp: list=None, libraries: list=None):
         extra_link_args += ['-g']
         undef_macros += ['NDEBUG']
 
-    _modules.append(Extension(
+    all_modules.append(Extension(
         name=name,
         extra_compile_args=extra_compile_args,
         extra_link_args=extra_link_args,
@@ -109,5 +104,5 @@ def use_ccache():
 
 
 if __name__ == '__main__':
-    _modules = []
+    all_modules = []
     main()

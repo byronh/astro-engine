@@ -1,6 +1,5 @@
 #include "graphics/renderer.h"
 #include "graphics/gl.h"
-#include <glm/gtc/matrix_transform.hpp>
 
 
 void Renderer::initialize() {
@@ -22,14 +21,6 @@ void Renderer::initialize() {
 
     // TODO make AssetManager class to manage lifetime
     this->models[0] = new Model();
-
-//    for (int x = -16; x < 16; x++) {
-//        for (int z = -16; z < 16; z++) {
-//            Matrix4 transform;
-//            transform = glm::translate(transform, Vector3(x * 2.5, 0, z * 2.5));
-//            this->add_component(0, 0, transform);
-//        }
-//    }
 }
 
 void Renderer::add_component(unsigned int entity_id, unsigned int model_id, Matrix4 transform) {
