@@ -19,7 +19,7 @@ def main():
            cpp=['graphics/camera', 'graphics/gl', 'graphics/model', 'graphics/renderer'],
            libraries=['GLEW'])
     module('graphics.shader', cpp=['graphics/shader', 'graphics/gl'], libraries=['GLEW'])
-    module('window', libraries=['glfw'])
+    module('window', libraries=['glfw'], macros=[('GLFW_INCLUDE_NONE', None)])
 
     fix_distutils()
     distutils.ccompiler.CCompiler.compile = parallel_compile
@@ -36,7 +36,7 @@ def main():
     )
 
 
-def module(name: str, cpp: list=None, libraries: list=None):
+def module(name: str, cpp: list=None, libraries: list=None, macros: list=None):
     name = '{}.{}'.format(PROJECT_NAME, name)
 
     extra_compile_args = ['-std=c++14']
@@ -44,6 +44,8 @@ def module(name: str, cpp: list=None, libraries: list=None):
 
     if not isinstance(libraries, list):
         libraries = []
+    if not isinstance(macros, list):
+        macros = []
 
     undef_macros = []
     sources = ['{}.pyx'.format(name.replace('.', '/'))]
@@ -57,6 +59,7 @@ def module(name: str, cpp: list=None, libraries: list=None):
 
     all_modules.append(Extension(
         name=name,
+        define_macros=macros,
         extra_compile_args=extra_compile_args,
         extra_link_args=extra_link_args,
         include_dirs=['src'],

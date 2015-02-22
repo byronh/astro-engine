@@ -18,17 +18,19 @@ cdef extern from "GLFW/glfw3.h":
     ctypedef void (*GLFWframebuffersizefun)(Window*, int, int)
     ctypedef void (*GLFWkeyfun)(Window*, int, int, int, int)
 
-    int initialize "glfwInit" ()
-    Window* create "glfwCreateWindow" (int width, int height, const char* title,
-                                                  Monitor* monitor, Window* share)
+    bint initialize "glfwInit" ()
+    void close "glfwSetWindowShouldClose" (Window* window, bint value)
+    Window* create "glfwCreateWindow" (int width, int height, const char* title, Monitor* monitor, Window* share)
     void destroy "glfwDestroyWindow" (Window* window)
     void hint "glfwWindowHint" (int target, int hint)
     void make_context_current "glfwMakeContextCurrent" (Window* window)
     void poll_events "glfwPollEvents" ()
+    bint should_close "glfwWindowShouldClose" (Window* window)
     void swap_buffers "glfwSwapBuffers" (Window* window)
     void swap_interval "glfwSwapInterval" (int interval)
+    void terminate "glfwTerminate" ()
 
     GLFWerrorfun set_error_callback "glfwSetErrorCallback" (GLFWerrorfun cbfun)
+    GLFWkeyfun set_key_callback "glfwSetKeyCallback" (Window* window, GLFWkeyfun cbfun)
     GLFWframebuffersizefun set_resize_callback "glfwSetFramebufferSizeCallback" (Window* window,
                                                                                  GLFWframebuffersizefun cbfun)
-    GLFWkeyfun set_key_callback "glfwSetKeyCallback" (Window* window, GLFWkeyfun cbfun)
