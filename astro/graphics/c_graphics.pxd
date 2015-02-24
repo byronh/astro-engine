@@ -6,8 +6,16 @@ cdef extern from "graphics/camera.h":
     cppclass Camera:
         c_math.Matrix4 projection
         c_math.Matrix4 view
+        c_math.Vector3 direction
+        c_math.Vector3 position
+        c_math.Vector3 up
+
         Camera()
-        Camera(const c_math.Matrix4& projection, const c_math.Matrix4& view)
+
+        void look_at(const c_math.Vector3& target)
+        void move(const c_math.Vector3& displacement)
+        void rotate(const c_math.Vector3& axis, float angle)
+        void update()
 
 
 cdef extern from "graphics/renderer.h":

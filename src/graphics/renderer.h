@@ -8,7 +8,7 @@
 
 class Renderer {
 public:
-    static const unsigned int max_instances = 1024;
+    static const unsigned int max_instances = 1024*1024;
 
     void add_component(unsigned int entity_id, unsigned int model_id, Matrix4 transform);
     void initialize();

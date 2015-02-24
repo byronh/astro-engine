@@ -1,11 +1,25 @@
-from astro.math cimport matrix
+from astro.math cimport matrix, vector
 
 
 cdef class Camera:
 
-    def __init__(self, matrix.Matrix4 projection, matrix.Matrix4 view):
+    def __init__(self, matrix.Matrix4 projection):
         self.c.projection = projection.m
-        self.c.view = view.m
+
+    def look_at(self, vector.Vector3 target):
+        self.c.look_at(target.v)
+
+    def move(self, vector.Vector3 displacement):
+        self.c.move(displacement.v)
+
+    def move_to(self, vector.Vector3 destination):
+        self.c.position = destination.v
+
+    def rotate(self, vector.Vector3 axis, float angle):
+        self.c.rotate(axis.v, angle)
+
+    def update(self):
+        self.c.update()
 
     property combined:
         def __get__(Camera self):
