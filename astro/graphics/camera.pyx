@@ -1,4 +1,4 @@
-from astro.math cimport matrix, vector
+from astro.math cimport c_math, matrix, vector
 
 
 cdef class Camera:
@@ -15,8 +15,24 @@ cdef class Camera:
     def move_to(self, vector.Vector3 destination):
         self.c.position = destination.v
 
+    def pitch(self, float amount):
+        cdef c_math.Vector3 right = c_math.cross(self.c.direction, self.c.up)
+        self.c.rotate(right, amount)
+
+    def roll(self, float amount):
+        self.c.rotate(self.c.direction, amount)
+
     def rotate(self, vector.Vector3 axis, float angle):
         self.c.rotate(axis.v, angle)
+
+    def step(self, float amount):
+        cdef c_math.Vector3 vec = c_math.normalize(self.c.direction) * amount
+        self.c.move(vec)
+
+    def strafe(self, float amount):
+        cdef c_math.Vector3 vec = c_math.cross(self.c.direction, self.c.up)
+        vec = c_math.normalize(vec) * amount
+        self.c.move(vec)
 
     def update(self):
         self.c.update()

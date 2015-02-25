@@ -36,6 +36,12 @@ cdef class Window:
         c_window.make_context_current(self.window)
         c_window.swap_interval(1)
 
+    def disable_cursor(self):
+        c_window.set_input_mode(self.window, c_window.CURSOR, c_window.CURSOR_DISABLED)
+
+    def enable_cursor(self):
+        c_window.set_input_mode(self.window, c_window.CURSOR, c_window.CURSOR_NORMAL)
+
     def poll_events(self):
         c_window.poll_events()
 

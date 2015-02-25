@@ -1,6 +1,10 @@
 cdef extern from "GLFW/glfw3.h":
     cdef int CONTEXT_VERSION_MAJOR "GLFW_CONTEXT_VERSION_MAJOR"
     cdef int CONTEXT_VERSION_MINOR "GLFW_CONTEXT_VERSION_MINOR"
+    cdef int CURSOR "GLFW_CURSOR"
+    cdef int CURSOR_DISABLED "GLFW_CURSOR_DISABLED"
+    cdef int CURSOR_HIDDEN "GLFW_CURSOR_HIDDEN"
+    cdef int CURSOR_NORMAL "GLFW_CURSOR_NORMAL"
     cdef int FLOATING "GLFW_FLOATING"
     cdef int OPENGL_CORE_PROFILE "GLFW_OPENGL_CORE_PROFILE"
     cdef int OPENGL_FORWARD_COMPAT "GLFW_OPENGL_FORWARD_COMPAT"
@@ -28,6 +32,7 @@ cdef extern from "GLFW/glfw3.h":
     void hint "glfwWindowHint" (int target, int hint)
     void make_context_current "glfwMakeContextCurrent" (Window* window)
     void poll_events "glfwPollEvents" ()
+    void set_input_mode "glfwSetInputMode" (Window* window, int mode, int value)
     bint should_close "glfwWindowShouldClose" (Window* window)
     void swap_buffers "glfwSwapBuffers" (Window* window)
     void swap_interval "glfwSwapInterval" (int interval)

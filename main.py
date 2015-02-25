@@ -19,11 +19,12 @@ class ExampleGame(ApplicationListener, InputListener):
         self.renderer = Renderer()
         self.viewport = Viewport()
 
-        self.cam = Camera(Matrix4.perspective(45, 16 / 9, 0.1, 100))
+        self.cam = Camera(Matrix4.perspective(45, 16 / 9, 0.1, 1000))
         self.cam.move_to(Vector3(16, 12, 10))
         self.cam.look_at(Vector3(0, 0, 0))
 
     def create(self):
+        # self.app.window.disable_cursor()
         self.app.set_input_listener(self.multiplexer)
         self.renderer.initialize()
 
@@ -53,16 +54,23 @@ class ExampleGame(ApplicationListener, InputListener):
         if key_code == Keys.KEY_ESCAPE:
             self.app.exit()
         elif key_code == Keys.KEY_A:
-            self.cam.rotate(Vector3(0, 1, 0), 10)
+            self.cam.strafe(-2)
         elif key_code == Keys.KEY_D:
-            self.cam.rotate(Vector3(0, 1, 0), -10)
+            self.cam.strafe(2)
         elif key_code == Keys.KEY_W:
-            self.cam.rotate(Vector3(0, 0, 1), -10)
+            self.cam.step(2)
         elif key_code == Keys.KEY_S:
-            self.cam.rotate(Vector3(0, 0, 1), 10)
+            self.cam.step(-2)
 
     def mouse_move(self, x_pos: float, y_pos: float) -> bool:
-        print("({:4.1f}, {:4.1f})".format(x_pos, y_pos))
+        if x_pos > self.app.config.width / 2 + 200:
+            self.cam.roll(0.25)
+        elif x_pos < self.app.config.width / 2 - 200:
+            self.cam.roll(-0.25)
+        if y_pos > self.app.config.height / 2 + 200:
+            self.cam.pitch(-0.25)
+        elif y_pos < self.app.config.height / 2 - 200:
+            self.cam.pitch(0.25)
 
 
 if __name__ == '__main__':
