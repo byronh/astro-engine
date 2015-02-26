@@ -2,24 +2,34 @@ from Cython.Build import cythonize
 from multiprocessing import pool
 from setuptools import Extension, setup
 import distutils.ccompiler
-
+import os
+import subprocess
+import sys
 
 DEBUG = True
 PROJECT_NAME = 'astro'
 
 
 def main():
-    """ Build the whole engine as a python package """
+    """ Compile the c++ and cython sources, then package whole engine as a python module """
 
-    module('core.entitymanager', cpp=['core/entitymanager'])
-    module('graphics.camera', cpp=['graphics/camera'])
-    module('math.vector')
-    module('math.matrix')
-    module('graphics.renderer',
-           cpp=['graphics/camera', 'graphics/gl', 'graphics/model', 'graphics/renderer'],
-           libraries=['GLEW'])
-    module('graphics.shader', cpp=['graphics/shader', 'graphics/gl'], libraries=['GLEW'])
-    module('window', libraries=['glfw'], macros=[('GLFW_INCLUDE_NONE', None)])
+    extra_compile_args = ['-std=c++14']
+    extra_link_args = ['-std=c++14']
+    undef_macros = []
+    if DEBUG:
+        extra_compile_args += ['-Wall', '-Werror', '-Wno-unused-function']
+        extra_link_args += ['-g']
+        undef_macros += ['NDEBUG']
+
+    modules = Extension(
+        extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
+        name='*',
+        include_dirs=['src'],
+        language='c++',
+        sources=['{}/**/*.pyx'.format(PROJECT_NAME)],
+        undef_macros=undef_macros
+    )
 
     fix_distutils()
     distutils.ccompiler.CCompiler.compile = parallel_compile
@@ -32,42 +42,8 @@ def main():
         url='https://github.com/byronh/astro-engine',
         version='0.1',
         packages=[PROJECT_NAME],
-        ext_modules=cythonize(all_modules)
+        ext_modules=cythonize([modules])
     )
-
-
-def module(name: str, cpp: list=None, libraries: list=None, macros: list=None):
-    name = '{}.{}'.format(PROJECT_NAME, name)
-
-    extra_compile_args = ['-std=c++14']
-    extra_link_args = ['-std=c++14']
-
-    if not isinstance(libraries, list):
-        libraries = []
-    if not isinstance(macros, list):
-        macros = []
-
-    undef_macros = []
-    sources = ['{}.pyx'.format(name.replace('.', '/'))]
-    if cpp:
-        sources += ['src/{}.cpp'.format(path) for path in cpp]
-    print(name, sources)
-    if DEBUG:
-        extra_compile_args += ['-Wall', '-Werror', '-Wno-unused-function']
-        extra_link_args += ['-g']
-        undef_macros += ['NDEBUG']
-
-    all_modules.append(Extension(
-        name=name,
-        define_macros=macros,
-        extra_compile_args=extra_compile_args,
-        extra_link_args=extra_link_args,
-        include_dirs=['src'],
-        language='c++',
-        libraries=libraries,
-        sources=sources,
-        undef_macros=undef_macros,
-    ))
 
 
 def fix_distutils():
@@ -98,14 +74,27 @@ def parallel_compile(self, sources, output_dir=None, macros=None, include_dirs=N
 
 def use_ccache():
     """ Use ccache to speed up c++ compile times, if available """
-    import os
-    import subprocess
-
     result = subprocess.call(['which', 'ccache'])
     if result == 0:
         os.environ['CC'] = 'ccache gcc'
 
 
 if __name__ == '__main__':
-    all_modules = []
+    args = sys.argv[1:]
+
+    # Make a `cleanall` rule to get rid of intermediate and library files
+    if 'clean' in args:
+        subprocess.Popen('rm -rf build', shell=True, executable='/bin/bash')
+        subprocess.Popen('find ./{} -name "*.cpp" -type f -print -delete'.format(PROJECT_NAME),
+                         shell=True, executable='/bin/bash')
+        subprocess.Popen('find ./{} -name "*.so" -type f -print -delete'.format(PROJECT_NAME),
+                         shell=True, executable='/bin/bash')
+
+    # We want to always use build_ext --inplace
+    if args.count('build_ext') > 0 and args.count('--inplace') == 0:
+        sys.argv.insert(sys.argv.index('build_ext') + 1, '--inplace')
+
+    # Only build for 64-bit target
+    os.environ['ARCHFLAGS'] = '-arch x86_64'
+
     main()

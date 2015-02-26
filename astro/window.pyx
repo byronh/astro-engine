@@ -1,3 +1,6 @@
+# distutils: libraries = glfw
+# distutils: define_macros = GLFW_INCLUDE_NONE
+
 cimport c_window
 
 

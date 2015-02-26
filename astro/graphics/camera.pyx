@@ -1,3 +1,5 @@
+# distutils: sources = src/graphics/camera.cpp
+
 from astro.math cimport c_math, matrix, vector
 
 

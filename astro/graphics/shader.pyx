@@ -1,3 +1,6 @@
+# distutils: libraries = GLEW
+# distutils: sources = src/graphics/shader.cpp src/graphics/gl.cpp
+
 cimport c_graphics
 import os
 

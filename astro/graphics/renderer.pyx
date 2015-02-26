@@ -1,3 +1,6 @@
+# distutils: libraries = GLEW
+# distutils: sources = src/graphics/camera.cpp src/graphics/gl.cpp src/graphics/model.cpp src/graphics/renderer.cpp
+
 from astro.math cimport matrix
 from camera cimport Camera
 

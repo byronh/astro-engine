@@ -1,3 +1,5 @@
+# distutils: sources = src/core/entitymanager.cpp
+
 cimport c_core
 
 
