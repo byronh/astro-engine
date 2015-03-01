@@ -4,27 +4,27 @@ from enum import IntEnum, unique
 
 class InputListener(metaclass=ABCMeta):
     def key_down(self, key_code):
-        return NotImplemented
+        return False
 
     def key_up(self, key_code):
-        return NotImplemented
+        return False
 
     def mouse_down(self, button):
-        return NotImplemented
+        return False
 
     def mouse_move(self, x_pos, y_pos):
-        return NotImplemented
+        return False
 
     def mouse_up(self, button):
-        return NotImplemented
+        return False
 
 
 class InputMultiplexer(InputListener):
     def __init__(self):
         self.listeners = []
 
-    def add_input_listener(self, input_listener):
-        self.listeners.append(input_listener)
+    def add_input_listeners(self, *input_listeners):
+        self.listeners += input_listeners
 
     def remove_input_listener(self, input_listener):
         self.listeners.remove(input_listener)

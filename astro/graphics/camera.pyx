@@ -30,6 +30,9 @@ cdef class Camera:
     def roll(self, float amount):
         self.c.rotate(self.c.direction, amount)
 
+    def yaw(self, float amount):
+        self.c.rotate(self.c.up, amount)
+
     def rotate(self, vector.Vector3 axis, float angle):
         self.c.rotate(axis.v, angle)
 
@@ -48,6 +51,14 @@ cdef class Camera:
 
     def update(self):
         self.c.update()
+
+    @property
+    def viewport_width(self):
+        return self.c.viewport_width
+
+    @property
+    def viewport_height(self):
+        return self.c.viewport_height
 
     property combined:
         def __get__(Camera self):

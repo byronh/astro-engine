@@ -14,6 +14,7 @@ cdef class Application:
 
     def exit(self):
         self.running = False
+        return True
 
     @property
     def width(self):
@@ -32,7 +33,7 @@ cdef class Application:
         self.running = True
 
         cdef double t = 0.0
-        cdef double dt = 1.0 / 30.0
+        cdef double dt = 0.01
 
         cdef double current_time = platform.hires_time_seconds()
         cdef double accumulator = 0.0
@@ -48,10 +49,10 @@ cdef class Application:
 
             accumulator += frame_time
 
-            while accumulator >= dt:
-                self.application_listener.update(dt)
-                accumulator -= dt
-                t += dt
+            # while accumulator >= dt:
+            self.application_listener.update(dt)
+                # accumulator -= dt
+                # t += dt
 
             self.application_listener.render()
             self.window.swap_buffers()

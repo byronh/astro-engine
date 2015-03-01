@@ -6,6 +6,7 @@ from astro.math.vector import Vector3
 from astro.graphics.camera import Camera
 from astro.graphics.renderer import Renderer
 from astro.graphics.shader import Shader
+from astro.graphics.utils.cameracontrol import FirstPersonCameraController
 from os import path
 
 
@@ -13,13 +14,15 @@ class ExampleGame(ApplicationListener, InputListener):
     def __init__(self):
         super().__init__()
         self.entities = EntityManager()
-        self.multiplexer = InputMultiplexer()
-        self.multiplexer.add_input_listener(self)
         self.renderer = Renderer()
 
         self.cam = Camera(self.app.width, self.app.height)
+        self.cam_controller = FirstPersonCameraController(self.cam)
         self.cam.move_to(Vector3(16, 12, 10))
         self.cam.look_at(Vector3(0, 0, 0))
+
+        self.multiplexer = InputMultiplexer()
+        self.multiplexer.add_input_listeners(self, self.cam_controller)
 
     def create(self):
         self.app.set_input_listener(self.multiplexer)
@@ -38,10 +41,10 @@ class ExampleGame(ApplicationListener, InputListener):
         print('Uniform location: {}'.format(shader.get_uniform_location('u_combined')))
 
     def update(self, delta_time):
-        pass
+        # print("step")
+        self.cam_controller.update(delta_time)
 
     def render(self):
-        self.cam.update()
         self.renderer.render(self.cam)
 
     def resize(self, width, height):
@@ -52,15 +55,7 @@ class ExampleGame(ApplicationListener, InputListener):
 
     def key_down(self, key_code: int):
         if key_code == Keys.KEY_ESCAPE:
-            self.app.exit()
-        elif key_code == Keys.KEY_A:
-            self.cam.strafe(-2)
-        elif key_code == Keys.KEY_D:
-            self.cam.strafe(2)
-        elif key_code == Keys.KEY_W:
-            self.cam.step(2)
-        elif key_code == Keys.KEY_S:
-            self.cam.step(-2)
+            return self.app.exit()
 
     # def mouse_move(self, x_pos: float, y_pos: float) -> bool:
     #     if x_pos > self.viewport.width / 2 + 200:
