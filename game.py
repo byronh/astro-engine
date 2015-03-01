@@ -41,7 +41,6 @@ class ExampleGame(ApplicationListener, InputListener):
         print('Uniform location: {}'.format(shader.get_uniform_location('u_combined')))
 
     def update(self, delta_time):
-        # print("step")
         self.cam_controller.update(delta_time)
 
     def render(self):
@@ -56,13 +55,3 @@ class ExampleGame(ApplicationListener, InputListener):
     def key_down(self, key_code: int):
         if key_code == Keys.KEY_ESCAPE:
             return self.app.exit()
-
-    # def mouse_move(self, x_pos: float, y_pos: float) -> bool:
-    #     if x_pos > self.viewport.width / 2 + 200:
-    #         self.cam.roll(0.25)
-    #     elif x_pos < self.viewport.width / 2 - 200:
-    #         self.cam.roll(-0.25)
-    #     if y_pos > self.viewport.height / 2 + 200:
-    #         self.cam.pitch(-0.25)
-    #     elif y_pos < self.viewport.height / 2 - 200:
-    #         self.cam.pitch(0.25)
