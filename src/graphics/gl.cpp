@@ -6,6 +6,17 @@
 
 namespace gl {
 
+    void clear(void) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    void info(void) {
+        printf("OpenGL version: %s\n", glGetString(GL_VERSION));
+        printf("GLSL version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+        printf("Vendor: %s\n", glGetString(GL_VENDOR));
+        printf("Renderer: %s\n", glGetString(GL_RENDERER));
+    }
+
     void initialize(void) {
         glewExperimental = GL_TRUE;
         GLenum error = glewInit();
@@ -19,19 +30,12 @@ namespace gl {
         glDepthFunc(GL_LESS);
     }
 
-    void info(void) {
-        printf("OpenGL version: %s\n", glGetString(GL_VERSION));
-        printf("GLSL version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-        printf("Vendor: %s\n", glGetString(GL_VENDOR));
-        printf("Renderer: %s\n", glGetString(GL_RENDERER));
-    }
-
     void set_clear_color(Color c) {
         glClearColor(c.r, c.g, c.b, c.a);
     }
 
-    void clear(void) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    void set_viewport(int width, int height) {
+        glViewport(0, 0, width, height);
     }
 
     unsigned create_program(void) {

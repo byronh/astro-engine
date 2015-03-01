@@ -34,10 +34,9 @@ void Renderer::add_component(unsigned int entity_id, unsigned int model_id, Matr
 
 void Renderer::render(Camera* camera) {
     gl::clear();
+    gl::set_viewport((int)camera->viewport_width, (int)camera->viewport_height);
 
-    // TODO move to camera class
-    Matrix4 combined = camera->projection * camera->view;
-    gl::set_uniform_matrix(0, combined);
+    gl::set_uniform_matrix(0, camera->combined);
 
     for (auto item: this->models) {
         Model* model = item.second;

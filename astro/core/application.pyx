@@ -1,4 +1,5 @@
 from abc import ABCMeta
+from platform import Application
 
 
 class ApplicationConfig:
@@ -10,8 +11,11 @@ class ApplicationConfig:
 
 
 class ApplicationListener(metaclass=ABCMeta):
-    def __init__(self, application=None):
-        self.app = application
+
+    @property
+    def app(self) -> Application:
+        """ :rtype: Application """
+        return self._app
 
     def create(self):
         return NotImplemented

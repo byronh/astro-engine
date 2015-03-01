@@ -20,10 +20,11 @@ namespace gl {
     };
 
     // General
-    void initialize(void);
-    void info(void);
-    void set_clear_color(Color c);
     void clear(void);
+    void info(void);
+    void initialize(void);
+    void set_clear_color(Color c);
+    void set_viewport(int width, int height);
 
     // Shader program functions
     unsigned create_program(void);

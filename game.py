@@ -17,7 +17,7 @@ class ExampleGame(ApplicationListener, InputListener):
         self.multiplexer.add_input_listener(self)
         self.renderer = Renderer()
 
-        self.cam = Camera(Matrix4.perspective(45, 1366 / 768, 0.1, 1000))
+        self.cam = Camera(self.app.width, self.app.height)
         self.cam.move_to(Vector3(16, 12, 10))
         self.cam.look_at(Vector3(0, 0, 0))
 
@@ -43,6 +43,9 @@ class ExampleGame(ApplicationListener, InputListener):
     def render(self):
         self.cam.update()
         self.renderer.render(self.cam)
+
+    def resize(self, width, height):
+        self.cam.set_viewport(width, height)
 
     def destroy(self):
         self.renderer.shutdown()

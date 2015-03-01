@@ -1,10 +1,14 @@
 #include "graphics/camera.h"
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
 
-Camera::Camera() : direction(Vector3(0, 0, -1)), up(Vector3(0, 1, 0)) {
-
+Camera::Camera(float viewport_width, float viewport_height) :
+        direction(Vector3(0, 0, -1)),
+        up(Vector3(0, 1, 0)),
+        viewport_width(viewport_width),
+        viewport_height(viewport_height) {
 }
 
 void Camera::look_at(const Vector3 &target) {
@@ -27,7 +31,10 @@ void Camera::rotate(const Vector3 &axis, float angle) {
 
 
 void Camera::update() {
+    float aspect = this->viewport_width / this->viewport_height;
+    this->projection = glm::perspective(this->field_of_view, aspect, this->near, this->far);
     this->view = glm::lookAt(this->position, this->position + this->direction, this->up);
+    this->combined = this->projection * this->view;
 }
 
 void Camera::normalize_up() {

@@ -1,5 +1,5 @@
 from astro.core.application import ApplicationConfig
-from astro.core.platform import DesktopApplication
+from astro.core.platform import Application
 from game import ExampleGame
 import logging
 
@@ -14,7 +14,7 @@ def main():
     config.height = 768
     config.samples = 8
 
-    app = DesktopApplication(config)
+    app = Application(config)
     app.run(ExampleGame)
 
 

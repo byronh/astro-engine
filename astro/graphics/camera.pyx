@@ -5,8 +5,14 @@ from astro.math cimport c_math, matrix, vector
 
 cdef class Camera:
 
-    def __init__(self, matrix.Matrix4 projection):
-        self.c.projection = projection.m
+    def __cinit__(self):
+        self.c = NULL
+
+    def __dealloc__(self):
+        del self.c
+
+    def __init__(self, float viewport_width, float viewport_height):
+        self.c = new cCamera(viewport_width, viewport_height)
 
     def look_at(self, vector.Vector3 target):
         self.c.look_at(target.v)
@@ -27,6 +33,10 @@ cdef class Camera:
     def rotate(self, vector.Vector3 axis, float angle):
         self.c.rotate(axis.v, angle)
 
+    def set_viewport(self, int width, int height):
+        self.c.viewport_width = width
+        self.c.viewport_height = height
+
     def step(self, float amount):
         cdef c_math.Vector3 vec = c_math.normalize(self.c.direction) * amount
         self.c.move(vec)
@@ -42,7 +52,7 @@ cdef class Camera:
     property combined:
         def __get__(Camera self):
             cdef matrix.Matrix4 mat = matrix.Matrix4()
-            mat.m = self.c.projection * self.c.view
+            mat.m = self.c.combined
             return mat
 
     property projection:
@@ -50,13 +60,9 @@ cdef class Camera:
             cdef matrix.Matrix4 mat = matrix.Matrix4()
             mat.m = self.c.projection
             return mat
-        def __set__(Camera self, matrix.Matrix4 value):
-            self.c.projection = value.m
 
     property view:
         def __get__(Camera self):
             cdef matrix.Matrix4 mat = matrix.Matrix4()
             mat.m = self.c.view
             return mat
-        def __set__(Camera self, matrix.Matrix4 value):
-            self.c.view = value.m

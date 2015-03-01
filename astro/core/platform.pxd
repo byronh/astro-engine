@@ -116,6 +116,7 @@ cdef extern from "<SDL2/SDL.h>" nogil:
     SDL_Window* SDL_CreateWindow(char* title, int x, int y, int w, int h, unsigned int flags)
     void SDL_DestroyWindow(SDL_Window* window)
     char* SDL_GetError()
+    void SDL_GetWindowSize(SDL_Window* window, int* w, int* h)
     SDL_GLContext SDL_GL_CreateContext(SDL_Window* window)
     void SDL_GL_DeleteContext(SDL_GLContext)
     void SDL_GL_SetAttribute(int attribute, int value)
@@ -142,8 +143,9 @@ cdef inline double hires_time_seconds():
     return monotime.tv_sec + (monotime.tv_nsec / 1000000000)
 
 
-cdef class DesktopApplication:
+cdef class Application:
     cdef bint running
+    cdef int window_width, window_height
     cdef object application_listener
     cdef object config
     cdef object input_listener
