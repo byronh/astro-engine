@@ -1,5 +1,4 @@
-cdef extern from "<SDL2/SDL.h>":
-
+cdef extern from "<SDL2/SDL.h>" nogil:
     ctypedef void* SDL_Window
     ctypedef void* SDL_GLContext
     ctypedef void* SDL_Surface
@@ -124,6 +123,23 @@ cdef extern from "<SDL2/SDL.h>":
     bint SDL_PollEvent(SDL_Event* event)
     void SDL_SetWindowTitle(SDL_Window* window, char* title)
     unsigned int SDL_GetTicks()
+
+
+cdef extern from "<time.h>" nogil:
+    ctypedef long time_t
+    int CLOCK_MONOTONIC
+
+    ctypedef struct timespec:
+        time_t tv_sec
+        long tv_nsec
+
+    int clock_gettime(int clk_id, timespec* tp)
+
+
+cdef inline double hires_time_seconds():
+    cdef timespec monotime
+    clock_gettime(CLOCK_MONOTONIC, &monotime)
+    return monotime.tv_sec + (monotime.tv_nsec / 1000000000)
 
 
 cdef class DesktopApplication:

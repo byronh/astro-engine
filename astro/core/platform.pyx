@@ -22,10 +22,28 @@ cdef class DesktopApplication:
 
         self.running = True
 
+        cdef double t = 0.0
+        cdef double dt = 1.0 / 30.0
+
+        cdef double current_time = platform.hires_time_seconds()
+        cdef double accumulator = 0.0
+
+        cdef double new_time, frame_time
+
         while self.running:
             self.poll_events()
 
-            self.application_listener.update(0)
+            new_time = platform.hires_time_seconds()
+            frame_time = new_time - current_time
+            current_time = new_time
+
+            accumulator += frame_time
+
+            while accumulator >= dt:
+                self.application_listener.update(dt)
+                accumulator -= dt
+                t += dt
+
             self.application_listener.render()
             self.window.swap_buffers()
 

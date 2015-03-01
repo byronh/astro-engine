@@ -10,8 +10,8 @@ def main():
 
     config = ApplicationConfig()
     config.title = "Example Game"
-    config.width = 800
-    config.height = 600
+    config.width = 1366
+    config.height = 768
     config.samples = 8
 
     app = DesktopApplication(config)

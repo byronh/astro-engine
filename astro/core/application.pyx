@@ -3,7 +3,7 @@ from abc import ABCMeta
 
 class ApplicationConfig:
     def __init__(self):
-        self.title = None
+        self.title = "Astro"
         self.width = 800
         self.height = 600
         self.samples = 0
