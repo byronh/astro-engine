@@ -82,19 +82,18 @@ def use_ccache():
 if __name__ == '__main__':
     args = sys.argv[1:]
 
-    # Make a `cleanall` rule to get rid of intermediate and library files
     if 'clean' in args:
         subprocess.Popen('rm -rf build', shell=True, executable='/bin/bash')
         subprocess.Popen('find ./{} -name "*.cpp" -type f -print -delete'.format(PROJECT_NAME),
                          shell=True, executable='/bin/bash')
         subprocess.Popen('find ./{} -name "*.so" -type f -print -delete'.format(PROJECT_NAME),
                          shell=True, executable='/bin/bash')
+    else:
+        # Always build extensions in-place
+        if args.count('build_ext') > 0 and args.count('--inplace') == 0:
+            sys.argv.insert(sys.argv.index('build_ext') + 1, '--inplace')
 
-    # We want to always use build_ext --inplace
-    if args.count('build_ext') > 0 and args.count('--inplace') == 0:
-        sys.argv.insert(sys.argv.index('build_ext') + 1, '--inplace')
+        # Only build for 64-bit architecture
+        os.environ['ARCHFLAGS'] = '-arch x86_64'
 
-    # Only build for 64-bit target
-    os.environ['ARCHFLAGS'] = '-arch x86_64'
-
-    main()
+        main()
