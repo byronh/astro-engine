@@ -2,13 +2,13 @@ from astro.core.input import InputListener, Keys
 from astro.graphics.camera import Camera
 
 
-class FirstPersonCameraController(InputListener):
+class DebugCameraController(InputListener):
     def __init__(self, camera, velocity=10):
         """ :type camera: Camera """
         super().__init__()
         self.camera = camera
         self.keys = set()
-        self.sensitivity = 0.001
+        self.sensitivity = 0.002
         self.velocity = velocity
         self.mouse_x, self.mouse_y = self.camera.viewport_width / 2, self.camera.viewport_height / 2
 
@@ -36,8 +36,8 @@ class FirstPersonCameraController(InputListener):
             self.camera.strafe(-self.velocity * delta_time)
         if self.STRAFE_RIGHT in self.keys:
             self.camera.strafe(self.velocity * delta_time)
-        delta_x = (self.camera.viewport_width / 2 - self.mouse_x) * 2
-        delta_y = (self.camera.viewport_height / 2 - self.mouse_y) * 2
+        delta_x = self.camera.viewport_width / 2 - self.mouse_x
+        delta_y = self.camera.viewport_height / 2 - self.mouse_y
         self.camera.pitch(delta_y * self.sensitivity)
         self.camera.yaw(delta_x * self.sensitivity)
         self.camera.update()

@@ -26,7 +26,7 @@ class ApplicationListener(metaclass=ABCMeta):
     def update(self, delta_time):
         return NotImplemented
 
-    def render(self):
+    def render(self, delta_time):
         return NotImplemented
 
     def resize(self, width, height):

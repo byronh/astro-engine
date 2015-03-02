@@ -1,3 +1,5 @@
+from os import path
+
 from astro.ecs.entity import EntityManager
 from astro.core.application import ApplicationListener
 from astro.core.input import InputListener, InputMultiplexer, Keys
@@ -6,8 +8,7 @@ from astro.math.vector import Vector3
 from astro.graphics.camera import Camera
 from astro.graphics.renderer import Renderer
 from astro.graphics.shader import Shader
-from astro.graphics.utils.cameracontrol import FirstPersonCameraController
-from os import path
+from astro.utils.cameracontrol import DebugCameraController
 
 
 class ExampleGame(ApplicationListener, InputListener):
@@ -17,7 +18,7 @@ class ExampleGame(ApplicationListener, InputListener):
         self.renderer = Renderer()
 
         self.cam = Camera(self.app.width, self.app.height)
-        self.cam_controller = FirstPersonCameraController(self.cam)
+        self.cam_controller = DebugCameraController(self.cam)
         self.cam.move_to(Vector3(16, 12, 10))
         self.cam.look_at(Vector3(0, 0, 0))
 
@@ -41,9 +42,10 @@ class ExampleGame(ApplicationListener, InputListener):
         print('Uniform location: {}'.format(shader.get_uniform_location('u_combined')))
 
     def update(self, delta_time):
-        self.cam_controller.update(delta_time)
+        pass
 
-    def render(self):
+    def render(self, delta_time):
+        self.cam_controller.update(delta_time)
         self.renderer.render(self.cam)
 
     def resize(self, width, height):

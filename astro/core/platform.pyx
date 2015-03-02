@@ -32,29 +32,32 @@ cdef class Application:
 
         self.running = True
 
-        cdef double t = 0.0
-        cdef double dt = 0.01
+        cdef long t = 0
+        cdef long dt = 33333333  # 30 simulation updates per second
+        cdef double simulation_dt, render_dt
 
-        cdef double current_time = platform.hires_time_seconds()
-        cdef double accumulator = 0.0
+        cdef long current_time = platform.hires_time()
+        cdef long accumulator = 0
 
-        cdef double new_time, frame_time
+        cdef long new_time, frame_time
 
         while self.running:
             self.poll_events()
 
-            new_time = platform.hires_time_seconds()
+            new_time = platform.hires_time()
             frame_time = new_time - current_time
             current_time = new_time
 
             accumulator += frame_time
 
-            # while accumulator >= dt:
-            self.application_listener.update(dt)
-                # accumulator -= dt
-                # t += dt
+            while accumulator >= dt:
+                simulation_dt = dt / 1000000000.0
+                self.application_listener.update(simulation_dt)
+                accumulator -= dt
+                t += dt
 
-            self.application_listener.render()
+            render_dt = frame_time / 1000000000.0
+            self.application_listener.render(render_dt)
             self.window.swap_buffers()
 
         self.application_listener.destroy()

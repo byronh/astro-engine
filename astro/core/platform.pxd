@@ -137,10 +137,10 @@ cdef extern from "<time.h>" nogil:
     int clock_gettime(int clk_id, timespec* tp)
 
 
-cdef inline double hires_time_seconds():
+cdef inline long hires_time():
     cdef timespec monotime
     clock_gettime(CLOCK_MONOTONIC, &monotime)
-    return monotime.tv_sec + (monotime.tv_nsec / 1000000000)
+    return monotime.tv_sec * 1000000000 + monotime.tv_nsec
 
 
 cdef class Application:
