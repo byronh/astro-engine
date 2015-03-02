@@ -151,6 +151,9 @@ cdef class Application:
     cdef object input_listener
     cdef Window window
 
+    cdef long frame_times[10]
+    cdef unsigned int frame_index
+
     cdef void poll_events(self)
 
 

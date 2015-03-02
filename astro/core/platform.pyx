@@ -2,9 +2,14 @@
 
 cimport platform
 
+DEF NANOSECONDS_PER_SECOND = 1000000000.0
+DEF SECONDS_PER_NANOSECOND = 0.000000001
+DEF SIM_STEP = 33333333  # nanoseconds
+
 
 cdef class Application:
     def __cinit__(self):
+        self.frame_index = 0
         self.running = False
 
     def __init__(self, config):
@@ -15,6 +20,13 @@ cdef class Application:
     def exit(self):
         self.running = False
         return True
+
+    def get_fps(self):
+        cdef long total = 0
+        for frame_time in self.frame_times:
+            total += frame_time
+        cdef double average = total / 10
+        return NANOSECONDS_PER_SECOND / average
 
     @property
     def width(self):
@@ -33,7 +45,7 @@ cdef class Application:
         self.running = True
 
         cdef long t = 0
-        cdef long dt = 33333333  # 30 simulation updates per second
+        cdef long dt = SIM_STEP
         cdef double simulation_dt, render_dt
 
         cdef long current_time = platform.hires_time()
@@ -51,14 +63,20 @@ cdef class Application:
             accumulator += frame_time
 
             while accumulator >= dt:
-                simulation_dt = dt / 1000000000.0
+                simulation_dt = dt * SECONDS_PER_NANOSECOND
                 self.application_listener.update(simulation_dt)
                 accumulator -= dt
                 t += dt
 
-            render_dt = frame_time / 1000000000.0
+            render_dt = frame_time * SECONDS_PER_NANOSECOND
             self.application_listener.render(render_dt)
             self.window.swap_buffers()
+
+            self.frame_times[self.frame_index] = frame_time
+            if self.frame_index >= 9:
+                self.frame_index = 0
+            else:
+                self.frame_index += 1
 
         self.application_listener.destroy()
 
